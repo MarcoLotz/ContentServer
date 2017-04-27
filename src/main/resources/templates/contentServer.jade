@@ -1,0 +1,10 @@
+-@ val innerContent: String
+-@ val directoryName: String = "root (/)"
+!!! 5
+html
+  head
+    title Content Server
+  body
+    h1 #{directoryName}:
+    <hr>
+    p #{unescape(innerContent)}

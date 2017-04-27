@@ -1,0 +1,7 @@
+{
+  "mountPath" : "/Users/prometheus/Desktop/projects",
+  "port" : 8013,
+  "username": "marco",
+  "password": "abc",
+  "showHiddenFiles": true
+}
