@@ -9,6 +9,7 @@ trait FileSystemItem
   def isFile : Boolean
   def humanReadableSize: String
   def extension: String
+  def absolutePath : String
 
   def getHtmlTemplatePath(): String
 }

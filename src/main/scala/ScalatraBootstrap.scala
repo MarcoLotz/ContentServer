@@ -1,7 +1,8 @@
 import javax.servlet.ServletContext
 
-import com.marcolotz.ContentServer
+import com.marcolotz.ContentServlet
 import com.marcolotz.configuration.ConfigurationManager
+import com.marcolotz.filesystem.FileSystemManager
 import org.scalatra.LifeCycle
 /**
   * Created by prometheus on 19/04/2017.
@@ -15,17 +16,17 @@ class ScalatraBootstrap extends LifeCycle {
   println("Loading configuration")
 
   private val config = new ConfigurationManager().load()
-
   configureServer()
 
   override def init(context: ServletContext) {
     // Mount servlets.
-    context.mount(new ContentServer, "/content/*")
-    context.mount(new LandingServer, "/*")
+    context.mount(new ContentServlet, "/content/*")
+    context.mount(new LandingServlet, "/*")
   }
 
   def configureServer() =
   {
       // TODO: configure server
+      FileSystemManager.init(config)
   }
 }

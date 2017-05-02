@@ -9,7 +9,7 @@
 		extra-sbtVersion="0.13"
 		conf="runtime"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20170427104224"/>
+		date="20170428200619"/>
 	<dependencies>
 		<module organisation="com.earldouglas" name="xsbt-web-plugin">
 			<revision name="0.7.0" status="release" pubdate="20140208203822" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://github.com/JamesEarlDouglas/xsbt-web-plugin" extra-scalaVersion="2.10" extra-sbtVersion="0.13" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="0">

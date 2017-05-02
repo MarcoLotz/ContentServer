@@ -1,7 +1,0 @@
-[0m[[0mdebug[0m] [0mCopy resource mappings: [0m
-[0m[[0mdebug[0m] [0m	(/Users/prometheus/Desktop/projects/marcolotz/serverui/src/main/resources/logback.xml,/Users/prometheus/Desktop/projects/marcolotz/serverui/target/scala-2.12/classes/logback.xml)[0m
-[0m[[0mdebug[0m] [0m	(/Users/prometheus/Desktop/projects/marcolotz/serverui/src/main/resources/templates,/Users/prometheus/Desktop/projects/marcolotz/serverui/target/scala-2.12/classes/templates)[0m
-[0m[[0mdebug[0m] [0m	(/Users/prometheus/Desktop/projects/marcolotz/serverui/src/main/resources/templates/contentDirectory.jade,/Users/prometheus/Desktop/projects/marcolotz/serverui/target/scala-2.12/classes/templates/contentDirectory.jade)[0m
-[0m[[0mdebug[0m] [0m	(/Users/prometheus/Desktop/projects/marcolotz/serverui/src/main/resources/templates/contentFile.jade,/Users/prometheus/Desktop/projects/marcolotz/serverui/target/scala-2.12/classes/templates/contentFile.jade)[0m
-[0m[[0mdebug[0m] [0m	(/Users/prometheus/Desktop/projects/marcolotz/serverui/src/main/resources/templates/contentServer.jade,/Users/prometheus/Desktop/projects/marcolotz/serverui/target/scala-2.12/classes/templates/contentServer.jade)[0m
-[0m[[0mdebug[0m] [0m	(/Users/prometheus/Desktop/projects/marcolotz/serverui/src/main/resources/templates/landingServer.jade,/Users/prometheus/Desktop/projects/marcolotz/serverui/target/scala-2.12/classes/templates/landingServer.jade)[0m

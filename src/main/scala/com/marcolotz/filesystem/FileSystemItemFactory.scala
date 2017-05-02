@@ -10,15 +10,22 @@ import org.apache.commons.io.{FileUtils, FilenameUtils}
   */
 object FileSystemItemFactory {
 
-  abstract class FileSystemItemImp(file: File) extends LazyLogging with FileSystemItem
-  {
+  abstract class FileSystemItemImp(file: File) extends LazyLogging with FileSystemItem {
     override val name = file.getName
     override val isReadable = file.canRead
     override val isDirectory = file.isDirectory
     override val isFile = !isDirectory
     override val extension = ""
+    override val absolutePath = file.getAbsolutePath()
 
     logger.debug("item: " + name + "\n\tsize:" + size)
+
+    override def hashCode: Int = {
+      var hashCode: Int = 1
+      hashCode = 31 * hashCode + name.hashCode()
+      hashCode = 31 * hashCode + absolutePath.hashCode()
+      return hashCode
+    }
   }
 
   private class FileSystemDirectory(file: File) extends FileSystemItemImp (file){

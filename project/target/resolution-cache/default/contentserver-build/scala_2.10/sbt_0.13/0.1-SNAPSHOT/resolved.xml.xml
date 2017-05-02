@@ -4,7 +4,7 @@
 		module="contentserver-build"
 		revision="0.1-SNAPSHOT"
 		status="integration"
-		publication="20170427104224"
+		publication="20170428200619"
 		e:sbtVersion="0.13" e:scalaVersion="2.10"
 	>
 		<description>

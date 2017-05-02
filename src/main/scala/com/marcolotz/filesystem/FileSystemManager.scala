@@ -1,13 +1,19 @@
 package com.marcolotz.filesystem
 
+import com.marcolotz.configuration.ServerConfiguration
+
 /**
   * Created by prometheus on 20/04/2017.
   */
 // TODO: Write unit tests for this
-class FileSystemManager(rootPath: String){
+object FileSystemManager{
 
-  val showHiddenFiles = false
-  val filterExtensions = false
+  var rootPath: String = ""
+
+  var showHiddenFiles = false
+  var filterExtensions = false
+
+  val discoveredFSItems = new scala.collection.mutable.HashMap[Int, FileSystemItem]
 
   // Filtering functions:
   val hiddenFile = (x: FileSystemItem) => if (!showHiddenFiles) !x.name.startsWith(".") else true
@@ -18,11 +24,20 @@ class FileSystemManager(rootPath: String){
   //val filteringFunctions = Array[(FileSystemItem) => Boolean](hiddenFile _,
   //                              filteringFunctions _)
 
+  def init(conf : ServerConfiguration) = {
+    rootPath = conf.mountPath
+    showHiddenFiles = conf.showHiddenFiles
+  }
+
   // TODO: decide the type of exception
   @throws(classOf[Exception])
   def listDir(path: String = ""):List[FileSystemItem] = {
     if (!validPath()) throw new Exception("Invalid Path")
-    else retrieveFiles(rootPath + path).filter(applyOptionalFilters)
+    else {
+      val fsItem = retrieveFiles(rootPath + path).filter(applyOptionalFilters)
+      reportFsItem(fsItem)
+      fsItem
+    }
   }
 
   def validPath(): Boolean = {
@@ -48,5 +63,17 @@ class FileSystemManager(rootPath: String){
   {
     //filteringFunctions.map(func => func(item))
     true
+  }
+
+  /***
+    * Report all file system items in order to avoid providing absolute paths to the client
+    * @param fsItem
+    */
+  def reportFsItem(fsItem: List[FileSystemItem]) = {
+      fsItem.foreach(item => discoveredFSItems.put(item.hashCode(), item))
+  }
+
+  def findFileByItem(fileId: Int): Option[FileSystemItem] = {
+    Option(discoveredFSItems.getOrElse(fileId, null))
   }
 }
