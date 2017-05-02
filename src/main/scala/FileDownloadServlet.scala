@@ -1,3 +1,4 @@
+import java.nio.file.{Files, Paths}
 import java.util.Properties
 
 import com.marcolotz.filesystem.{FileSystemItem, FileSystemManager}
@@ -16,45 +17,45 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
   properties.load(classOf[FileDownloadServlet].getResourceAsStream("extensions.properties"))
 
   def resolveContentType(resourcePath: String) = {
-    val extension = properties.get(FilenameUtils.getExtension(resourcePath))
-    // TODO: Check if this is the best solution if the extension is not found
-    if (extension != null) extension.toString else "text/plain"
+    val extension = Option(properties.get(FilenameUtils.getExtension(resourcePath)))
+
+    extension match {
+      case Some(ex) => ex.toString
+      case None => "application/octet-stream"
+    }
   }
 
-
-  get("/:fileId") {
-    val fileId = params.getOrElse("fileId", "")
-
-    // there's no such resource
-    if (fileId.equals("")) {
+  // TODO: Change 404 page
+  get("/*") {
+    val fileId = params.getOrElse("fileId", {
+      // there's no such resource
       logger.debug("empty value for the parameter fileId.")
       halt(404)
-    }
-    else {
+    })
 
-      val filePath = FileSystemManager.findFileByItem(fileId.toInt)
+    val filePath = FileSystemManager.findFileByItem(fileId.toInt)
 
-      filePath match {
-        case Some(file) =>
-          Option(servletContext.getResourceAsStream(file.absolutePath)) match {
+    filePath match {
+      case Some(file) =>
+        logger.debug("Download request of valid explored file.")
 
-            // File already discovered by the file manager
-            case Some(inputStream) => {
-              logger.debug("File is being downloaded: " + file)
+        val servedFile = Option(new java.io.File(file.absolutePath))
 
-              val fileContent = IOUtils.toByteArray(inputStream)
-
-              // find out content type for headers
-              contentType = resolveContentType(fileId)
-              fileContent
-            }
-            // Return resource not found (404)
-            case None => halt(404)
+        servedFile match {
+          case Some(file) => {
+            logger.debug("File is being downloaded: " + file)
+            contentType = resolveContentType(fileId)
+            response.setHeader("Content-Disposition", "attachment; filename=" + file.getName)
+            file
           }
-        case None => {
-          logger.debug("The file has not been explored yet. Is it a direct access?")
-          halt(404)
+          case None => {
+            logger.debug("File could not be provided as byte stream")
+            halt(404)
+          }
         }
+      case None => {
+        logger.debug("The file has not been explored yet. Is it a direct access?")
+        halt(404)
       }
     }
   }

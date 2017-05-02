@@ -12,11 +12,6 @@ class ContentServlet extends ScalatraServlet {
     Renderer.renderContentServer(fileList)
   }
 
-  get("/download/:file") {
-    val name = params.getOrElse("file", "world")
-    "Hello " + name
-  }
-
   get("/stream/:file") {
     val name = params.getOrElse("file", "world")
     "Hello " + name

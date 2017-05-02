@@ -22,6 +22,7 @@ class ScalatraBootstrap extends LifeCycle {
     // Mount servlets.
     context.mount(new ContentServlet, "/content/*")
     context.mount(new LandingServlet, "/*")
+    context.mount(new FileDownloadServlet, "/download/*")
   }
 
   def configureServer() =

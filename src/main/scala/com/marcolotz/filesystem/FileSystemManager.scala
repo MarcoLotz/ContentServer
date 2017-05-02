@@ -1,12 +1,13 @@
 package com.marcolotz.filesystem
 
 import com.marcolotz.configuration.ServerConfiguration
+import com.typesafe.scalalogging.LazyLogging
 
 /**
   * Created by prometheus on 20/04/2017.
   */
 // TODO: Write unit tests for this
-object FileSystemManager{
+object FileSystemManager extends LazyLogging{
 
   var rootPath: String = ""
 
@@ -70,7 +71,10 @@ object FileSystemManager{
     * @param fsItem
     */
   def reportFsItem(fsItem: List[FileSystemItem]) = {
-      fsItem.foreach(item => discoveredFSItems.put(item.hashCode(), item))
+      fsItem.foreach(item => {
+        discoveredFSItems.put(item.hashCode(), item)
+        logger.debug("Item reported! hashcode: " + item.hashCode() + " file name: " + item.name)
+      })
   }
 
   def findFileByItem(fileId: Int): Option[FileSystemItem] = {
