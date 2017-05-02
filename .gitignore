@@ -6,6 +6,11 @@
 *.user
 *.sln.docstates
 
+# Scala build results
+project/.idea
+project/target
+project/project
+
 # Build results
 
 [Dd]ebug/
