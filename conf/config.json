@@ -4,7 +4,9 @@
   "port" : 8013,
   "username": "marco",
   "password": "abc",
-  "showHiddenFiles": true,
-  "filterExtensions": false,
+  "showHiddenFiles": false,
+  "filteredoutExtensions": [
+    "md"
+  ],
   "preemptiveFileSystemExploration": true
 }

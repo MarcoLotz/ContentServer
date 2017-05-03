@@ -6,6 +6,5 @@ case class ServerConfiguration(mountPath: String,
                                username: String = "",
                                password: String = "",
                                showHiddenFiles: Boolean = false,
-                               filterExtensions: Boolean = false,
                                preemptiveFileSystemExploration: Boolean = true,
                                filteredoutExtensions: List[String] = List())

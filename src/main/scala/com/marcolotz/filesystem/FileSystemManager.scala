@@ -4,6 +4,7 @@ import java.io.File
 import java.nio.file.NotDirectoryException
 
 import com.marcolotz.configuration.ServerConfiguration
+import com.marcolotz.filesystem
 import com.typesafe.scalalogging.LazyLogging
 
 /**
@@ -13,26 +14,47 @@ import com.typesafe.scalalogging.LazyLogging
 object FileSystemManager extends LazyLogging {
 
   /** *
+    * Filtering options enabled in the configuration files
+    */
+  private object filteringFunctions extends LazyLogging {
+    /** *
+      * Filters out hidden files from reports when enabled
+      *
+      * @param item
+      * @return
+      */
+    def removeHiddenFiles(item: FileSystemItem) = if (!FileSystemManager.showHiddenFiles) !item.name.startsWith(".") else true
+
+    /** *
+      * Filters out files from a fixed extension
+      *
+      * @return
+      */
+    def removeExtensions (item: FileSystemItem) = if (!FileSystemManager.filteredoutExtensions.isEmpty) !FileSystemManager.filteredoutExtensions.contains(item.extension.toLowerCase()) else true
+
+  }
+
+  /** *
     * Mount entry point for the content server
     */
   var rootPath: String = ""
 
-  /***
+  /** *
     * File at the mount entry point
     */
   var rootFile: FileSystemItem = null
 
-  // Options from the configuration files
-  /***
+  // Options from the configuration file
+  /** *
     * Enables lambda to filter or not hidden files (files starting with '.')
     */
   var showHiddenFiles = false
   /** *
     * Filters out a given type of extension
     */
-  var filterExtensions = false
+  var filteredoutExtensions: List[String] = List()
 
-  /***
+  /** *
     * Pre analyses all the possible files on init, instead of requiring the user to
     * access that dir before being able to download it.
     */
@@ -43,20 +65,12 @@ object FileSystemManager extends LazyLogging {
     */
   var discoveredFSItems = Map[Int, FileSystemItem]()
 
-  // Filtering functions:
-  val hiddenFile = (x: FileSystemItem) => if (!showHiddenFiles) !x.name.startsWith(".") else true
-
-  // TODO: add extension filtering
-  val filteredExtension = (x: FileSystemItem) => if (filterExtensions) !x.name.startsWith(".") else true
-
-  //val filteringFunctions = Array[(FileSystemItem) => Boolean](hiddenFile _,
-  //                              filteringFunctions _)
-
   @throws[NotDirectoryException]
   def init(conf: ServerConfiguration) = {
     rootPath = conf.mountPath
     showHiddenFiles = conf.showHiddenFiles
     preemptiveFileSystemExploration = conf.preemptiveFileSystemExploration
+    filteredoutExtensions = conf.filteredoutExtensions.map(x => x.toLowerCase())
 
     val specifiedRootFile = new java.io.File(rootPath)
 
@@ -70,28 +84,34 @@ object FileSystemManager extends LazyLogging {
     if (preemptiveFileSystemExploration) recursivelyExploreFS()
   }
 
-  //TODO: Don't allow paths that try to go back or are more than a folder away
-  private def validPath(item: FileSystemItem): Boolean = {
-    true
+  // TODO: Write a method to check if the path is valid
+  private def validPath(item: FileSystemItem): Boolean = ???
+
+  private def applyFilteringFunctions(item: FileSystemItem): Boolean = {
+    filteringFunctions.removeExtensions(item) &&
+    filteringFunctions.removeHiddenFiles(item)
   }
 
-  /***
+  /** *
     * generate Map with the files that were just discovered
+    *
     * @param items
     * @return
     */
   private def reportItems(items: List[File]): Map[Int, FileSystemItem] = {
     val reportedMap: Map[Int, FileSystemItem] = items.map(item => FileSystemItemFactory(item)).map(item => item.hashCode() -> item).toMap
 
-    // TODO: Apply filters here
+    // Apply filters
+    val filteredMap = reportedMap.filter(item => applyFilteringFunctions(item._2))
 
     // Log the final output
-    reportedMap.foreach(entry => logger.debug("Item being reported: " + entry._2.name + " Path: " + entry._2.absolutePath))
-    reportedMap
+    filteredMap.foreach(entry => logger.debug("Item being reported: " + entry._2.name + " Path: " + entry._2.absolutePath))
+    filteredMap
   }
 
-  /***
+  /** *
     * Explore the files in the directory
+    *
     * @param topDir
     * @return a Map of reported files in the directory
     */
@@ -101,18 +121,18 @@ object FileSystemManager extends LazyLogging {
       val items = reportItems(dir.listFiles().toList)
 
       // It may be the first time visiting the directory
-      if (!preemptiveFileSystemExploration)
-        {
-          // TODO: Solve the problem of exploring the directory multiple times
-          discoveredFSItems = List(discoveredFSItems, items).flatten.toMap
-        }
+      if (!preemptiveFileSystemExploration) {
+        // TODO: Solve the problem of exploring the directory multiple times
+        discoveredFSItems = List(discoveredFSItems, items).flatten.toMap
+      }
       items
     }
     else Map()
   }
 
-  /***
+  /** *
     * Lists the content of a directory
+    *
     * @param topDir
     * @return
     */
@@ -120,8 +140,9 @@ object FileSystemManager extends LazyLogging {
     exploreDirectory(topDir).map(entry => entry._2) toList
   }
 
-  /***
+  /** *
     * Explores the file system recursively
+    *
     * @return Map of all the files under the top directory
     */
   def recursivelyExploreFS() {
@@ -135,20 +156,23 @@ object FileSystemManager extends LazyLogging {
         recursiveExploreFS(directoriesToExplore, List(reportedItemsAcc, newReportedFiles).flatten.toMap)
       }
     }
+
     logger.debug("File system exploration enabled.")
 
     discoveredFSItems = recursiveExploreFS(List(rootFile), Map())
   }
 
-  /***
+  /** *
     * Translates a file ID to a specific file
+    *
     * @param fileId
     * @return
     */
   def getFileFromId(fileId: Int): Option[FileSystemItem] = discoveredFSItems.get(fileId)
 
-  /***
+  /** *
     * Finds FileSystemItem by fileid
+    *
     * @param fileId
     * @return
     */
