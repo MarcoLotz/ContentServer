@@ -4,7 +4,7 @@ import com.marcolotz.filesystem.FileSystemItem
 import org.fusesource.scalate._
 
 /** *
-  * Renderer object for HTML webpages.
+  * Renderer object for HTML web-pages.
   *
   * @author Marco Lotz
   */
@@ -21,6 +21,7 @@ object Renderer {
     val fileInfo: List[String] = files.map(item => populateContentItemTemplate(item))
     val filesystemInfo = fileInfo.mkString(" ")
 
+    // TODO: Better to print relative paths, add as a configuration?
     engine.layout("templates/contentServer.jade", Map("innerContent" -> filesystemInfo, "topDirectory" -> topDirectory.absolutePath))
   }
 

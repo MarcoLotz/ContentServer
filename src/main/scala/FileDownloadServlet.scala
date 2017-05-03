@@ -1,4 +1,3 @@
-import java.nio.file.{Files, Paths}
 import java.util.Properties
 
 import com.marcolotz.filesystem.{FileSystemItem, FileSystemManager}

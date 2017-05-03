@@ -7,7 +7,7 @@ import com.typesafe.scalalogging.LazyLogging
 
 
 /***
-  * Content server. Fileid are used instead of paths, in order to
+  * Content server. FileId are used instead of paths, in order to
   * prevent the user from having server-side filesystem information.
   */
 class ContentServlet extends ScalatraServlet with LazyLogging {
@@ -30,9 +30,14 @@ class ContentServlet extends ScalatraServlet with LazyLogging {
       halt(404)
     }).toInt
 
-    val fileList = FileSystemManager.exploreFileSystemItem(fileId)
-    // TODO: Solve signature
-    Renderer.renderContentServer(fileList, FileSystemManager.discoveredFSItems.get(fileId).get)
+    val topDirectory = FileSystemManager.getFileFromId(fileId).getOrElse({
+      logger.debug("file system item id could not be found in the reported items")
+      halt(404)
+    })
+
+    val fileList = FileSystemManager.exploreFileSystemItem(topDirectory)
+    
+    Renderer.renderContentServer(fileList, topDirectory)
   }
 
   get("/stream") {

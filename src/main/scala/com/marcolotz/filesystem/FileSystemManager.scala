@@ -186,4 +186,6 @@ object FileSystemManager extends LazyLogging {
     }*/
     exploreFileSystemItem(fsItem)
   }
+
+  def getFileFromId(fileId: Int): Option[FileSystemItem] = discoveredFSItems.get(fileId)
 }

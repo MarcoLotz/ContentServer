@@ -11,7 +11,7 @@ class ScalatraBootstrap extends LifeCycle {
 
   // Entry point of the application
 
-  // TODO: Command line arguments for diffent
+  // TODO: Command line arguments to bypass Json config.
   // TODO: Find a more elegant way to output messages
   println("Loading configuration")
 
