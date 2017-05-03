@@ -74,7 +74,8 @@ object FileSystemManager extends LazyLogging {
 
     val specifiedRootFile = new java.io.File(rootPath)
 
-    if (!specifiedRootFile.exists && !specifiedRootFile.isDirectory) {
+    if ((!specifiedRootFile.exists && !specifiedRootFile.isDirectory) ||
+        !validPath(specifiedRootFile)){
       throw new NotDirectoryException("file " + specifiedRootFile.getAbsolutePath + " is not a directory")
     }
     else {
@@ -84,8 +85,12 @@ object FileSystemManager extends LazyLogging {
     if (preemptiveFileSystemExploration) recursivelyExploreFS()
   }
 
-  // TODO: Write a method to check if the path is valid
-  private def validPath(item: FileSystemItem): Boolean = ???
+  /***
+    * Prevents relative paths on mount time. Only accepts absolute paths.
+    * @param item
+    * @return
+    */
+  private def validPath(item: File): Boolean = item.isAbsolute
 
   private def applyFilteringFunctions(item: FileSystemItem): Boolean = {
     filteringFunctions.removeExtensions(item) &&
