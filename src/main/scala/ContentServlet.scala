@@ -21,7 +21,7 @@ class ContentServlet extends ScalatraServlet with LazyLogging {
   /***
     * shows the content of a given directory, using its file ID
     */
-  get("/directory/*") {
+  get("/directory") {
     contentType = "text/html"
 
     val fileId = params.getOrElse("fileId", {
@@ -35,7 +35,7 @@ class ContentServlet extends ScalatraServlet with LazyLogging {
     Renderer.renderContentServer(fileList, FileSystemManager.discoveredFSItems.get(fileId).get)
   }
 
-  get("/stream/*:file") {
+  get("/stream") {
     val name = params.getOrElse("file", "Marco")
     "Hello " + name
   }

@@ -57,6 +57,7 @@ object FileSystemManager extends LazyLogging {
   def init(conf: ServerConfiguration) = {
     rootPath = conf.mountPath
     showHiddenFiles = conf.showHiddenFiles
+    preemptiveFileSystemExploration = conf.preemptiveFileSystemExploration
 
     val specifiedRootFile = new java.io.File(rootPath)
 

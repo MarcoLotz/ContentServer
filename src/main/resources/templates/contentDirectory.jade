@@ -3,5 +3,5 @@ p <strong>Directory:</strong>
 p name: #{name}
 p size: #{humanReadableSize}
 p readable: #{isReadable}
-<a href="download?fileId=#{item.hashCode.toString}"><input type="button" value="Download directory"/></a>
-<a href="content/directory?fileId=#{item.hashCode.toString}"><input type="button" value="Explore directory"/></a>
+<a href="/download?fileId=#{item.hashCode.toString}"><input type="button" value="Download directory"/></a>
+<a href="/content/directory?fileId=#{item.hashCode.toString}"><input type="button" value="Explore directory"/></a>
