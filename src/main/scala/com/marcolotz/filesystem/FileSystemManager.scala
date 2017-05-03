@@ -12,12 +12,12 @@ import com.typesafe.scalalogging.LazyLogging
 // TODO: Make a huge refactor on this.
 object FileSystemManager extends LazyLogging {
 
-  /***
+  /** *
     * Mount entry point for the content server
     */
   var rootPath: String = ""
 
-  /***
+  /** *
     * File at the mount entry point
     * // TODO: Is this the best way to declare?
     */
@@ -61,15 +61,13 @@ object FileSystemManager extends LazyLogging {
 
     val specifiedRootFile = new java.io.File(rootPath)
 
-    if (!specifiedRootFile.exists && !specifiedRootFile.isDirectory)
-    {
+    if (!specifiedRootFile.exists && !specifiedRootFile.isDirectory) {
       // TODO: Throw exception.
       // TODO: Change this for a match statement
     }
-    else
-      {
-        rootFile = FileSystemItemFactory(specifiedRootFile)
-      }
+    else {
+      rootFile = FileSystemItemFactory(specifiedRootFile)
+    }
 
     if (preemptiveFileSystemExploration) preexploreFileSystem()
   }
@@ -80,9 +78,9 @@ object FileSystemManager extends LazyLogging {
   def listRootPath(): List[FileSystemItem] = {
     //if (!validPath()) throw new Exception("Invalid Path")
     //else {
-      val fsItem = retrieveFiles(rootPath).filter(applyOptionalFilters)
-      reportFsItem(fsItem)
-      fsItem
+    val fsItem = retrieveFiles(rootPath).filter(applyOptionalFilters)
+    reportFsItem(fsItem)
+    fsItem
     //}
   }
 
@@ -131,22 +129,10 @@ object FileSystemManager extends LazyLogging {
 
   // TODO: Change to use immutable map on recursive call
   // TODO: Throw exception?
-  def preexploreFileSystem() =
-  {
+  def preexploreFileSystem() = {
     logger.debug("File system exploration enabled.")
 
-    def reportItem(item: File): Unit = {
-      val fsItem = FileSystemItemFactory(item)
-      logger.debug("Item being reported: " + fsItem.name + " Path: " + fsItem.absolutePath)
-      if (validPath(fsItem)) {
-        discoveredFSItems.put(fsItem.hashCode(), fsItem)
-      }
-      else {
-        logger.debug("Item outside expected path")
-      }
-    }
-
-    def dirsToExplore(directoryList: List[File]): Unit = {
+    def recursivelyExploreDirs(directoryList: List[File]): Map[Int, FileSystemItem] = {
 
       if (!directoryList.isEmpty) {
         val exploredDir = directoryList.head
@@ -155,17 +141,18 @@ object FileSystemManager extends LazyLogging {
         // explore the next directories under itß
         val reportDirectories = exploredDir.listFiles().filter(file => file.isDirectory)
 
-        dirsToExplore(List.concat(directoryList.tail, reportDirectories))
+        recursivelyExploreDirs(List.concat(directoryList.tail, reportDirectories))
       }
+      else Map()
     }
 
     val rootDir = new java.io.File(rootPath)
     if (rootDir.exists() && rootDir.isDirectory) {
-      dirsToExplore(List(rootDir))
+      recursivelyExploreDirs(List(rootDir))
     }
   }
 
-  def exploreFileSystemItem(file : FileSystemItem): List[FileSystemItem] = {
+  def exploreFileSystemItem(file: FileSystemItem): List[FileSystemItem] = {
     val fsItems = retrieveFiles(file.absolutePath).filter(applyOptionalFilters)
     // TODO: this probably can be sent to inside the method
     if (!preemptiveFileSystemExploration) {
@@ -175,8 +162,7 @@ object FileSystemManager extends LazyLogging {
   }
 
   // TODO: Throw exception?
-  def exploreFileSystemItem(fileId: Int): List[FileSystemItem] =
-  {
+  def exploreFileSystemItem(fileId: Int): List[FileSystemItem] = {
     val fsItem = discoveredFSItems.get(fileId).get
 
     // TODO: Add this match statement for throwing exception on invalid items
@@ -187,5 +173,69 @@ object FileSystemManager extends LazyLogging {
     exploreFileSystemItem(fsItem)
   }
 
+  def reportItem(item: File): Unit = {
+    val fsItem = FileSystemItemFactory(item)
+    logger.debug("Item being reported: " + fsItem.name + " Path: " + fsItem.absolutePath)
+    if (validPath(fsItem)) {
+      discoveredFSItems.put(fsItem.hashCode(), fsItem)
+    }
+    else {
+      logger.debug("Item outside expected path")
+    }
+  }
+
+  // Implementation 2.0
+  def reportItems(items: List[File]): Map[Int, FileSystemItem] = {
+    val reportedMap: Map[Int, FileSystemItem] = items.map(item => FileSystemItemFactory(item)).map(item => item.hashCode() -> item).toMap
+
+    // TODO: Apply filters here
+    //reportedMap.foreach(entry => logger.debug("Item being reported: " + entry._2.name + " Path: " + entry._2.absolutePath)
+    // TODO: Log the final output
+    reportedMap
+  }
+
+  /***
+    * Explore the files in the directory
+    * @param topDir
+    * @return a Map of reported files in the directory
+    */
+  def exploreDirectory(topDir: FileSystemItem): Map[Int, FileSystemItem] = {
+    val dir = new java.io.File(topDir.absolutePath)
+    if (dir.exists() && dir.isDirectory) {
+      val items = reportItems(dir.listFiles().toList)
+
+      // It may be the first time visiting the directory
+      if (!preemptiveFileSystemExploration)
+        {
+          // TODO: Solve the problem of exploring the directory multiple times
+          //discoveredFSItems = List(discoveredFSItems, items).flatten.toMap
+        }
+      items
+    }
+    else Map()
+  }
+
+  /***
+    * Explores the file system recursively
+    * @return Map of all the files under the top directory
+    */
+  def recursivelyExploreFS(): Map[Int, FileSystemItem]= {
+    def recursiveExploreFS(dirList: List[FileSystemItem], reportedItems: Map[Int, FileSystemItem]): Map[Int, FileSystemItem] = {
+      val reportedFiles: Map[Int, FileSystemItem] = exploreDirectory(dirList.head)
+      val directoriesToExplore: List[FileSystemItem] = dirList.tail ::: reportedItems.filter(entry => entry._2.isDirectory).map(entry => entry._2).toList
+
+      recursiveExploreFS(directoriesToExplore, List(reportedItems,reportedFiles).flatten.toMap)
+    }
+    logger.debug("File system exploration enabled.")
+
+    recursiveExploreFS(List(rootFile), Map())
+  }
+
+  /***
+    * Translates a file ID to a specific file
+    * @param fileId
+    * @return
+    */
   def getFileFromId(fileId: Int): Option[FileSystemItem] = discoveredFSItems.get(fileId)
+
 }

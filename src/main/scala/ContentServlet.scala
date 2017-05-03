@@ -36,7 +36,7 @@ class ContentServlet extends ScalatraServlet with LazyLogging {
     })
 
     val fileList = FileSystemManager.exploreFileSystemItem(topDirectory)
-    
+
     Renderer.renderContentServer(fileList, topDirectory)
   }
 
