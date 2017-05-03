@@ -43,6 +43,7 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
 
         servedFile match {
           case Some(file) => {
+            // TODO: zip if it is a directory
             logger.debug("File is being downloaded: " + file)
             contentType = resolveContentType(fileId)
             response.setHeader("Content-Disposition", "attachment; filename=" + file.getName)

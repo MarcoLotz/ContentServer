@@ -6,9 +6,4 @@ class LandingServlet extends ScalatraServlet {
     contentType = "text/html"
     Renderer.renderLandingServer()
   }
-
-  get("/:name") {
-    val name = params.getOrElse("name", "world")
-    "Hello " + name
-  }
 } 

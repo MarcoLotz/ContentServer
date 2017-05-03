@@ -1,7 +1,10 @@
 {
-  "mountPath" : "/Users/prometheus/Desktop/projects",
+  "mountPath" : "/Users/prometheus/Desktop/sharedvmFolder",
+  "enableUserAuthentication": false,
   "port" : 8013,
   "username": "marco",
   "password": "abc",
-  "showHiddenFiles": true
+  "showHiddenFiles": true,
+  "filterExtensions": false,
+  "preemptiveFileSystemExploration": true
 }

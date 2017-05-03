@@ -3,14 +3,15 @@ package com.marcolotz.renderer
 import com.marcolotz.filesystem.FileSystemItem
 import org.fusesource.scalate._
 
-/**
-  * Created by prometheus on 26/04/2017.
+/***
+  * Renderer object for HTML webpages.
+  * @author Marco Lotz
   */
 object Renderer {
 
   val engine = new TemplateEngine
 
-  def renderContentServer(files: List[FileSystemItem]): String =
+  def renderContentServer(files: List[FileSystemItem], topDirectory: FileSystemItem) =
   {
     def populateContentItemTemplate(file: FileSystemItem): String =
     {
