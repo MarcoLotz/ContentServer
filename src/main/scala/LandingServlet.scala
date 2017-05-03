@@ -6,4 +6,4 @@ class LandingServlet extends ScalatraServlet {
     contentType = "text/html"
     Renderer.renderLandingServer()
   }
-} 
+}
