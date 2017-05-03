@@ -1,6 +1,7 @@
 package com.marcolotz.filesystem
 
 import java.io.File
+import java.nio.file.NotDirectoryException
 
 import com.marcolotz.configuration.ServerConfiguration
 import com.typesafe.scalalogging.LazyLogging
@@ -9,7 +10,6 @@ import com.typesafe.scalalogging.LazyLogging
   * Created by prometheus on 20/04/2017.
   */
 // TODO: Write unit tests for this
-// TODO: Make a huge refactor on this.
 object FileSystemManager extends LazyLogging {
 
   /** *
@@ -17,14 +17,13 @@ object FileSystemManager extends LazyLogging {
     */
   var rootPath: String = ""
 
-  /** *
+  /***
     * File at the mount entry point
-    * // TODO: Is this the best way to declare?
     */
   var rootFile: FileSystemItem = null
 
   // Options from the configuration files
-  /** *
+  /***
     * Enables lambda to filter or not hidden files (files starting with '.')
     */
   var showHiddenFiles = false
@@ -33,13 +32,13 @@ object FileSystemManager extends LazyLogging {
     */
   var filterExtensions = false
 
-  /** *
+  /***
     * Pre analyses all the possible files on init, instead of requiring the user to
     * access that dir before being able to download it.
     */
   var preemptiveFileSystemExploration = true
 
-  /** **
+  /***
     * Stores all the reported items
     */
   var discoveredFSItems = Map[Int, FileSystemItem]()
@@ -53,7 +52,7 @@ object FileSystemManager extends LazyLogging {
   //val filteringFunctions = Array[(FileSystemItem) => Boolean](hiddenFile _,
   //                              filteringFunctions _)
 
-  // TODO: Throw exception if it is not a file?
+  @throws[NotDirectoryException]
   def init(conf: ServerConfiguration) = {
     rootPath = conf.mountPath
     showHiddenFiles = conf.showHiddenFiles
@@ -62,8 +61,7 @@ object FileSystemManager extends LazyLogging {
     val specifiedRootFile = new java.io.File(rootPath)
 
     if (!specifiedRootFile.exists && !specifiedRootFile.isDirectory) {
-      // TODO: Throw exception.
-      // TODO: Change this for a match statement
+      throw new NotDirectoryException("file " + specifiedRootFile.getAbsolutePath + " is not a directory")
     }
     else {
       rootFile = FileSystemItemFactory(specifiedRootFile)
@@ -77,12 +75,18 @@ object FileSystemManager extends LazyLogging {
     true
   }
 
+  /***
+    * generate Map with the files that were just discovered
+    * @param items
+    * @return
+    */
   private def reportItems(items: List[File]): Map[Int, FileSystemItem] = {
     val reportedMap: Map[Int, FileSystemItem] = items.map(item => FileSystemItemFactory(item)).map(item => item.hashCode() -> item).toMap
 
     // TODO: Apply filters here
+
+    // Log the final output
     reportedMap.foreach(entry => logger.debug("Item being reported: " + entry._2.name + " Path: " + entry._2.absolutePath))
-    // TODO: Log the final output
     reportedMap
   }
 
