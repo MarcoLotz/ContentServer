@@ -14,7 +14,7 @@ class ContentServlet extends ScalatraServlet with LazyLogging {
 
   get("/") {
     contentType = "text/html"
-    val fileList = FileSystemManager.listRootPath()
+    val fileList = FileSystemManager.listDirectory(FileSystemManager.rootFile)
     Renderer.renderContentServer(fileList, FileSystemManager.rootFile)
   }
 
@@ -35,7 +35,7 @@ class ContentServlet extends ScalatraServlet with LazyLogging {
       halt(404)
     })
 
-    val fileList = FileSystemManager.exploreFileSystemItem(topDirectory)
+    val fileList = FileSystemManager.listDirectory(topDirectory)
 
     Renderer.renderContentServer(fileList, topDirectory)
   }

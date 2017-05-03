@@ -4,5 +4,5 @@ p name: #{name}
 p extension type: <italic>#{extension}</italic>
 p size: #{humanReadableSize}
 p readable: #{isReadable}
-<a href="download?fileId=#{item.hashCode.toString}"><input type="button" value="Download file"/></a>
+<a href="/download?fileId=#{item.hashCode.toString}"><input type="button" value="Download file"/></a>
 <button>Stream file</button>
