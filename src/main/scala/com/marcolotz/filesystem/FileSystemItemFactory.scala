@@ -26,28 +26,35 @@ object FileSystemItemFactory {
       hashCode = 31 * hashCode + absolutePath.hashCode()
       return hashCode
     }
+
+    override def equals(that: Any): Boolean =
+      that match {
+        case that: FileSystemItem => hashCode() == that.hashCode()
+        case _ => false
+      }
   }
 
-  private class FileSystemDirectory(file: File) extends FileSystemItemImp (file){
+  private class FileSystemDirectory(file: File) extends FileSystemItemImp(file) {
 
     override val size = FileUtils.sizeOfDirectory(file)
     override val humanReadableSize = FileUtils.byteCountToDisplaySize(size)
+
     override def getHtmlTemplatePath(): String = {
       "templates/contentDirectory.jade"
     }
   }
 
-  private class FileSystemFile (file: File) extends FileSystemItemImp (file) {
+  private class FileSystemFile(file: File) extends FileSystemItemImp(file) {
     override val size = file.length()
     override val humanReadableSize = FileUtils.byteCountToDisplaySize(size)
     override val extension: String = FilenameUtils.getExtension(file.getAbsolutePath)
+
     override def getHtmlTemplatePath(): String = {
-        "templates/contentFile.jade"
+      "templates/contentFile.jade"
     }
   }
 
-  def apply(f: File): FileSystemItem =
-  {
+  def apply(f: File): FileSystemItem = {
     if (f.isDirectory) new FileSystemDirectory(f)
     else new FileSystemFile(f)
   }

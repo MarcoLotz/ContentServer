@@ -15,7 +15,7 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
   logger.debug("Loading extensions")
   properties.load(classOf[FileDownloadServlet].getResourceAsStream("extensions.properties"))
 
-  def resolveContentType(resourcePath: String) = {
+  def resolveContentType(resourcePath: String): String = {
     val extension = Option(properties.get(FilenameUtils.getExtension(resourcePath)))
 
     extension match {
@@ -25,6 +25,7 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
   }
 
   // TODO: Change 404 page
+  // TODO: Check for large files
   get("/*") {
     val fileId = params.getOrElse("fileId", {
       // there's no such resource

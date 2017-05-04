@@ -30,7 +30,7 @@ object FileSystemManager extends LazyLogging {
       *
       * @return
       */
-    def removeExtensions (item: FileSystemItem) = if (!FileSystemManager.filteredoutExtensions.isEmpty) !FileSystemManager.filteredoutExtensions.contains(item.extension.toLowerCase()) else true
+    def removeExtensions(item: FileSystemItem) = if (!FileSystemManager.filteredoutExtensions.isEmpty) !FileSystemManager.filteredoutExtensions.contains(item.extension.toLowerCase()) else true
 
   }
 
@@ -60,7 +60,7 @@ object FileSystemManager extends LazyLogging {
     */
   var preemptiveFileSystemExploration = true
 
-  /***
+  /** *
     * Stores all the reported items
     */
   var discoveredFSItems = Map[Int, FileSystemItem]()
@@ -75,7 +75,7 @@ object FileSystemManager extends LazyLogging {
     val specifiedRootFile = new java.io.File(rootPath)
 
     if ((!specifiedRootFile.exists && !specifiedRootFile.isDirectory) ||
-        !validPath(specifiedRootFile)){
+      !validPath(specifiedRootFile)) {
       throw new NotDirectoryException("file " + specifiedRootFile.getAbsolutePath + " is not a directory")
     }
     else {
@@ -85,8 +85,9 @@ object FileSystemManager extends LazyLogging {
     if (preemptiveFileSystemExploration) recursivelyExploreFS()
   }
 
-  /***
+  /** *
     * Prevents relative paths on mount time. Only accepts absolute paths.
+    *
     * @param item
     * @return
     */
@@ -94,7 +95,7 @@ object FileSystemManager extends LazyLogging {
 
   private def applyFilteringFunctions(item: FileSystemItem): Boolean = {
     filteringFunctions.removeExtensions(item) &&
-    filteringFunctions.removeHiddenFiles(item)
+      filteringFunctions.removeHiddenFiles(item)
   }
 
   /** *

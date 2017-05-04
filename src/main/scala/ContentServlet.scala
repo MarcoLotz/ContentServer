@@ -1,16 +1,17 @@
 package com.marcolotz
 
+import com.marcolotz.auth.AuthenticationSupport
 import org.scalatra.ScalatraServlet
 import com.marcolotz.filesystem.FileSystemManager
 import com.marcolotz.renderer.Renderer
 import com.typesafe.scalalogging.LazyLogging
 
 
-/***
+/** *
   * Content server. FileId are used instead of paths, in order to
   * prevent the user from having server-side filesystem information.
   */
-class ContentServlet extends ScalatraServlet with LazyLogging {
+class ContentServlet extends ScalatraServlet with AuthenticationSupport with LazyLogging {
 
   get("/") {
     contentType = "text/html"
@@ -18,7 +19,7 @@ class ContentServlet extends ScalatraServlet with LazyLogging {
     Renderer.renderContentServer(fileList, FileSystemManager.rootFile)
   }
 
-  /***
+  /** *
     * shows the content of a given directory, using its file ID
     */
   get("/directory") {
@@ -44,4 +45,4 @@ class ContentServlet extends ScalatraServlet with LazyLogging {
     val name = params.getOrElse("file", "Marco")
     "Hello " + name
   }
-} 
+}

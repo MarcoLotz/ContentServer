@@ -8,8 +8,8 @@ import org.json4s.jackson.Serialization.read
 /**
   * Created by prometheus on 19/04/2017.
   */
-class ConfigurationManager (path: String = "conf/config.json") extends LazyLogging {
-// TODO: Change default path to current work directory
+class ConfigurationManager(path: String = "conf/config.json") extends LazyLogging {
+  // TODO: Change default path to current work directory
 
   def load(): ServerConfiguration = {
     implicit val formats = DefaultFormats

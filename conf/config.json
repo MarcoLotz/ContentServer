@@ -1,5 +1,5 @@
 {
-  "mountPath" : "/Users/prometheus/Desktop/sharedvmFolder",
+  "mountPath" : "/Users/prometheus/Desktop/videos",
   "enableUserAuthentication": false,
   "port" : 8013,
   "username": "marco",
