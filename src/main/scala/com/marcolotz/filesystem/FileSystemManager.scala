@@ -23,15 +23,21 @@ object FileSystemManager extends LazyLogging {
       * @param item
       * @return
       */
-    def removeHiddenFiles(item: FileSystemItem) = if (!FileSystemManager.showHiddenFiles) !item.name.startsWith(".") else true
+    def removeHiddenFiles(item: FileSystemItem): Boolean = {
+      if (!FileSystemManager.showHiddenFiles) !item.name.startsWith(".")
+      else true
+    }
 
     /** *
       * Filters out files from a fixed extension
       *
       * @return
       */
-    def removeExtensions(item: FileSystemItem) = if (!FileSystemManager.filteredoutExtensions.isEmpty) !FileSystemManager.filteredoutExtensions.contains(item.extension.toLowerCase()) else true
-
+    def removeExtensions(item: FileSystemItem): Boolean = {
+      if (!FileSystemManager.filteredoutExtensions.isEmpty) {
+        !FileSystemManager.filteredoutExtensions.contains(item.extension.toLowerCase())
+      } else true
+    }
   }
 
   /** *
@@ -66,7 +72,7 @@ object FileSystemManager extends LazyLogging {
   var discoveredFSItems = Map[Int, FileSystemItem]()
 
   @throws[NotDirectoryException]
-  def init(conf: ServerConfiguration) = {
+  def init(conf: ServerConfiguration): Unit = {
     rootPath = conf.mountPath
     showHiddenFiles = conf.showHiddenFiles
     preemptiveFileSystemExploration = conf.preemptiveFileSystemExploration
@@ -76,7 +82,10 @@ object FileSystemManager extends LazyLogging {
 
     if ((!specifiedRootFile.exists && !specifiedRootFile.isDirectory) ||
       !validPath(specifiedRootFile)) {
-      throw new NotDirectoryException("file " + specifiedRootFile.getAbsolutePath + " is not a directory")
+      throw new NotDirectoryException(
+        "file "
+          + specifiedRootFile.getAbsolutePath
+          + " is not a directory")
     }
     else {
       rootFile = FileSystemItemFactory(specifiedRootFile)
@@ -105,13 +114,16 @@ object FileSystemManager extends LazyLogging {
     * @return
     */
   private def reportItems(items: List[File]): Map[Int, FileSystemItem] = {
-    val reportedMap: Map[Int, FileSystemItem] = items.map(item => FileSystemItemFactory(item)).map(item => item.hashCode() -> item).toMap
+    val reportedMap: Map[Int, FileSystemItem] =
+      items.map(item => FileSystemItemFactory(item))
+        .map(item => item.hashCode() -> item).toMap
 
     // Apply filters
     val filteredMap = reportedMap.filter(item => applyFilteringFunctions(item._2))
 
     // Log the final output
-    filteredMap.foreach(entry => logger.debug("Item being reported: " + entry._2.name + " Path: " + entry._2.absolutePath))
+    filteredMap.foreach(entry => logger.debug(
+      "Item being reported: " + entry._2.name + " Path: " + entry._2.absolutePath))
     filteredMap
   }
 
@@ -153,13 +165,19 @@ object FileSystemManager extends LazyLogging {
     */
   def recursivelyExploreFS() {
 
-    def recursiveExploreFS(dirList: List[FileSystemItem], reportedItemsAcc: Map[Int, FileSystemItem]): Map[Int, FileSystemItem] = {
+    def recursiveExploreFS(dirList: List[FileSystemItem],
+                           reportedItemsAcc: Map[Int, FileSystemItem]):
+    Map[Int, FileSystemItem] = {
       if (dirList.isEmpty) reportedItemsAcc
       else {
         val newReportedFiles = exploreDirectory(dirList.head)
-        val directoriesToExplore = dirList.tail ::: newReportedFiles.filter(entry => entry._2.isDirectory).map(entry => entry._2).toList
+        val directoriesToExplore =
+          dirList.tail ::: (newReportedFiles
+            .filter(entry => entry._2.isDirectory)
+            .map(entry => entry._2).toList)
 
-        recursiveExploreFS(directoriesToExplore, List(reportedItemsAcc, newReportedFiles).flatten.toMap)
+        recursiveExploreFS(directoriesToExplore, List(reportedItemsAcc, newReportedFiles).
+          flatten.toMap)
       }
     }
 
@@ -182,6 +200,7 @@ object FileSystemManager extends LazyLogging {
     * @param fileId
     * @return
     */
-  def findFileByItem(fileId: Int): Option[FileSystemItem] = Option(discoveredFSItems.getOrElse(fileId, null))
+  def findFileByItem(fileId: Int): Option[FileSystemItem] =
+    Option(discoveredFSItems.getOrElse(fileId, null))
 
 }

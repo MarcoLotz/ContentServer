@@ -7,7 +7,8 @@ import org.scalatra.auth.strategy.BasicAuthSupport
 trait AuthenticationSupport extends ScentrySupport[User] with BasicAuthSupport[User] {
 
   /* Forces the compiler to check if any class in a hierarchy, including AuthenticationSupport
-   * is or extends ScalatraBase, so AuthencationSupport can now use fields or methods from ScalatraBase
+   * is or extends ScalatraBase, so AuthencationSupport can now use fields or methods from
+   * ScalatraBase
    */
   self: ScalatraBase =>
 
