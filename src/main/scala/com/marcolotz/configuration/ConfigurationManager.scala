@@ -1,7 +1,8 @@
 package com.marcolotz.configuration
 
-import com.typesafe.scalalogging.LazyLogging
 import java.nio.file.{Files, Paths}
+
+import com.typesafe.scalalogging.LazyLogging
 import org.json4s._
 import org.json4s.jackson.Serialization.read
 

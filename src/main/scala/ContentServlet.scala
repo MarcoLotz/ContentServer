@@ -1,10 +1,10 @@
 package com.marcolotz
 
 import com.marcolotz.auth.AuthenticationSupport
-import org.scalatra.ScalatraServlet
 import com.marcolotz.filesystem.FileSystemManager
 import com.marcolotz.renderer.Renderer
 import com.typesafe.scalalogging.LazyLogging
+import org.scalatra.ScalatraServlet
 
 
 /** *

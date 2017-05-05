@@ -1,8 +1,8 @@
 package com.marcolotz.auth
 
 import org.scalatra.ScalatraBase
-import org.scalatra.auth.{ScentryConfig, ScentrySupport}
 import org.scalatra.auth.strategy.BasicAuthSupport
+import org.scalatra.auth.{ScentryConfig, ScentrySupport}
 
 trait AuthenticationSupport extends ScentrySupport[User] with BasicAuthSupport[User] {
 

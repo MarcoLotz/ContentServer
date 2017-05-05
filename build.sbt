@@ -6,7 +6,7 @@ version := "0.1-SNAPSHOT"
 
 scalaVersion := "2.12.0"
 
-Seq(webSettings :_*)
+Seq(webSettings: _*)
 
 libraryDependencies ++= Seq(
   "org.json4s" %% "json4s-jackson" % "3.5.0",

@@ -1,8 +1,8 @@
 import java.util.Properties
 
-import com.marcolotz.filesystem.{FileSystemItem, FileSystemManager}
+import com.marcolotz.filesystem.FileSystemManager
 import com.typesafe.scalalogging.LazyLogging
-import org.apache.commons.io.{FilenameUtils, IOUtils}
+import org.apache.commons.io.FilenameUtils
 import org.scalatra.ScalatraServlet
 
 class FileDownloadServlet extends ScalatraServlet with LazyLogging {

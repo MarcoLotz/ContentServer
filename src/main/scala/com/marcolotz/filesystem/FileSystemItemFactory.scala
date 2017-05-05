@@ -10,6 +10,11 @@ import org.apache.commons.io.{FileUtils, FilenameUtils}
   */
 object FileSystemItemFactory {
 
+  def apply(f: File): FileSystemItem = {
+    if (f.isDirectory) new FileSystemDirectory(f)
+    else new FileSystemFile(f)
+  }
+
   abstract class FileSystemItemImp(file: File) extends LazyLogging with FileSystemItem {
     override val name = file.getName
     override val isReadable = file.canRead
@@ -20,18 +25,18 @@ object FileSystemItemFactory {
 
     logger.debug("item: " + name + "\n\tsize:" + size)
 
+    override def equals(that: Any): Boolean =
+      that match {
+        case that: FileSystemItem => hashCode() == that.hashCode()
+        case _ => false
+      }
+
     override def hashCode: Int = {
       var hashCode: Int = 1
       hashCode = 31 * hashCode + name.hashCode()
       hashCode = 31 * hashCode + absolutePath.hashCode()
       return hashCode
     }
-
-    override def equals(that: Any): Boolean =
-      that match {
-        case that: FileSystemItem => hashCode() == that.hashCode()
-        case _ => false
-      }
   }
 
   private class FileSystemDirectory(file: File) extends FileSystemItemImp(file) {
@@ -52,10 +57,5 @@ object FileSystemItemFactory {
     override def getHtmlTemplatePath(): String = {
       "templates/contentFile.jade"
     }
-  }
-
-  def apply(f: File): FileSystemItem = {
-    if (f.isDirectory) new FileSystemDirectory(f)
-    else new FileSystemFile(f)
   }
 }

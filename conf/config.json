@@ -1,7 +1,7 @@
 {
-  "mountPath" : "/Users/prometheus/Desktop/videos",
+  "mountPath": "/Users/prometheus/Desktop/videos",
   "enableUserAuthentication": false,
-  "port" : 8013,
+  "port": 8013,
   "username": "marco",
   "password": "abc",
   "showHiddenFiles": false,
