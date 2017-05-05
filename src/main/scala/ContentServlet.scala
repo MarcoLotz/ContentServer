@@ -13,8 +13,11 @@ import org.scalatra.ScalatraServlet
   */
 class ContentServlet extends ScalatraServlet with AuthenticationSupport with LazyLogging {
 
-  get("/") {
+  before(){
     contentType = "text/html"
+  }
+
+  get("/") {
     val fileList = FileSystemManager.listDirectory(FileSystemManager.rootFile)
     Renderer.renderContentServer(fileList, FileSystemManager.rootFile)
   }
@@ -23,8 +26,6 @@ class ContentServlet extends ScalatraServlet with AuthenticationSupport with Laz
     * shows the content of a given directory, using its file ID
     */
   get("/directory") {
-    contentType = "text/html"
-
     val fileId = params.getOrElse("fileId", {
       // there's no such resource
       logger.debug("empty value for the parameter fileId.")

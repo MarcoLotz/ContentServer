@@ -3,9 +3,13 @@ import com.marcolotz.renderer.Renderer
 import org.scalatra.ScalatraServlet
 
 class LandingServlet extends ScalatraServlet with AuthenticationSupport {
-  get("/") {
-    basicAuth
+
+  before(){
     contentType = "text/html"
+  }
+
+  get("/") {
+    //basicAuth
     Renderer.renderLandingServer()
   }
 }
