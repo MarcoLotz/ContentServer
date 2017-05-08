@@ -1,9 +1,10 @@
 package com.marcolotz.filesystem
 
-import java.io.File
+import java.io.{BufferedInputStream, File, FileInputStream, FileOutputStream}
 import java.nio.file.NotDirectoryException
+import java.util.zip.{ZipEntry, ZipOutputStream}
 
-import com.marcolotz.configuration.ServerConfiguration
+import com.marcolotz.configuration.{ConfigurationManager, ServerConfiguration}
 import com.typesafe.scalalogging.LazyLogging
 
 /**
@@ -60,7 +61,14 @@ object FileSystemManager extends LazyLogging {
       rootFile = FileSystemItemFactory(specifiedRootFile)
     }
 
-    if (preemptiveFileSystemExploration) recursivelyExploreFS()
+    if (preemptiveFileSystemExploration) discoveredFSItems = recursivelyExploreFS(rootFile)
+
+    // create temp folder for storing compressed directories
+    // TODO: Create a clean up after exit option, leave it on by default
+    val tmpDir = new File(conf.tempDirectory)
+    if (tmpDir.exists()) {
+      tmpDir.getParentFile.mkdirs()
+    }
   }
 
   /** *
@@ -72,11 +80,11 @@ object FileSystemManager extends LazyLogging {
   private def validPath(item: File): Boolean = item.isAbsolute
 
   /** *
-    * Explores the file system recursively
+    * Explores the file system recursively from top dir
     *
     * @return Map of all the files under the top directory
     */
-  def recursivelyExploreFS() {
+  def recursivelyExploreFS(topDir: FileSystemItem): Map[Int, FileSystemItem] = {
 
     def recursiveExploreFS(dirList: List[FileSystemItem],
                            reportedItemsAcc: Map[Int, FileSystemItem]):
@@ -96,7 +104,17 @@ object FileSystemManager extends LazyLogging {
 
     logger.debug("File system exploration enabled.")
 
-    discoveredFSItems = recursiveExploreFS(List(rootFile), Map())
+    recursiveExploreFS(List(topDir), Map())
+  }
+
+  /** *
+    * Lists the content of a directory
+    *
+    * @param topDir
+    * @return
+    */
+  def listDirectory(topDir: FileSystemItem): List[FileSystemItem] = {
+    exploreDirectory(topDir).map(entry => entry._2) toList
   }
 
   /** *
@@ -146,16 +164,6 @@ object FileSystemManager extends LazyLogging {
   }
 
   /** *
-    * Lists the content of a directory
-    *
-    * @param topDir
-    * @return
-    */
-  def listDirectory(topDir: FileSystemItem): List[FileSystemItem] = {
-    exploreDirectory(topDir).map(entry => entry._2) toList
-  }
-
-  /** *
     * Translates a file ID to a specific file
     *
     * @param fileId
@@ -171,6 +179,59 @@ object FileSystemManager extends LazyLogging {
     */
   def findFileByItem(fileId: Int): Option[FileSystemItem] =
     Option(discoveredFSItems.getOrElse(fileId, null))
+
+  // TODO: Check what happens when there are inner files inside
+  /** *
+    * Compress the directory into the tmp folder
+    *
+    * @param directory to be compressed
+    * @return the compressed directory
+    */
+  def getCompressedDirectory(directory: FileSystemItem): File = {
+    // TODO: Check implementation
+    def recursiveListFiles(f: File): Array[File] = {
+      val these = f.listFiles
+      these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)
+    }
+
+    def generateRelativePath(item: File): String = {
+      item.getAbsolutePath.replace(directory.absolutePath, "")
+    }
+
+    val directoryFile = new File(directory.absolutePath)
+
+    val content = recursiveListFiles(directoryFile)
+
+    // TODO: Make this OS independent?
+    val outputPath: String = ConfigurationManager.getConguration().tempDirectory +
+      "/" +
+      directoryFile.getName + ".zip"
+
+    logger.debug("zipping file: " + directoryFile.getAbsolutePath)
+    logger.debug("zip output dir: " + outputPath)
+
+    val zip = new ZipOutputStream(
+      new FileOutputStream(outputPath))
+
+    // TODO: Fix for recursive directories
+    content.foreach { file =>
+      logger.debug("adding to zip: " + file.getAbsolutePath)
+      zip.putNextEntry(new ZipEntry(generateRelativePath(file)))
+      val in = new BufferedInputStream(new FileInputStream(file.getAbsolutePath))
+      var b = in.read()
+      while (b > -1) {
+        zip.write(b)
+        b = in.read()
+      }
+      in.close()
+      zip.closeEntry()
+    }
+
+    // Write zip to tmp folder
+    zip.close()
+
+    new File(outputPath)
+  }
 
   /** *
     * Filtering options enabled in the configuration files

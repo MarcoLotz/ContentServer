@@ -1,3 +1,4 @@
+import java.io.File
 import java.util.Properties
 
 import com.marcolotz.filesystem.FileSystemManager
@@ -16,11 +17,14 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
   properties.load(classOf[FileDownloadServlet].getResourceAsStream("extensions.properties"))
 
   def resolveContentType(resourcePath: String): String = {
-    val extension = Option(properties.get(FilenameUtils.getExtension(resourcePath)))
-
-    extension match {
-      case Some(ex) => ex.toString
-      case None => "application/octet-stream"
+    val file = new File(resourcePath)
+    if (file.isDirectory) "application/zip"
+    else {
+      val extension = Option(properties.get(FilenameUtils.getExtension(resourcePath)))
+      extension match {
+        case Some(ex) => ex.toString
+        case None => "application/octet-stream"
+      }
     }
   }
 
@@ -33,21 +37,30 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
       halt(404)
     })
 
-    val filePath = FileSystemManager.findFileByItem(fileId.toInt)
+    val fileSystemItem = FileSystemManager.findFileByItem(fileId.toInt)
 
-    filePath match {
-      case Some(file) =>
+    fileSystemItem match {
+      case Some(fsItem) =>
         logger.debug("Download request of valid explored file.")
 
-        val servedFile = Option(new java.io.File(file.absolutePath))
-
-        servedFile match {
-          case Some(file) => {
-            // TODO: zip if it is a directory
-            logger.debug("File is being downloaded: " + file)
+        val optServedFile = Option(new java.io.File(fsItem.absolutePath))
+        optServedFile match {
+          case Some(servedFile) => {
+            logger.debug("File is being downloaded: " + fsItem)
             contentType = resolveContentType(fileId)
-            response.setHeader("Content-Disposition", "attachment; filename=" + file.getName)
-            file
+
+            if (servedFile.isDirectory) {
+              response.setHeader("Content-Disposition",
+                "attachment; filename=" + servedFile.getName()
+                  + ".zip")
+              // TODO: Should a tmp response be sent?
+              FileSystemManager.getCompressedDirectory(fsItem)
+            }
+            else {
+              response.setHeader("Content-Disposition",
+                "attachment; filename=" + servedFile.getName)
+              servedFile
+            }
           }
           case None => {
             logger.debug("File could not be provided as byte stream")
