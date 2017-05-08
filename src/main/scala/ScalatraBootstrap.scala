@@ -16,9 +16,6 @@ class ScalatraBootstrap extends LifeCycle with LazyLogging {
   // TODO: Command line arguments to bypass Json config.
   // TODO: Find a more elegant way to output messages
 
-  logger.info("Loading configuration")
-
-  private val config = new ConfigurationManager().load()
   configureServer()
 
   override def init(context: ServletContext) {
@@ -34,7 +31,10 @@ class ScalatraBootstrap extends LifeCycle with LazyLogging {
   }
 
   private def configureServer() = {
-    // TODO: configure server
-    FileSystemManager.init(config)
+    logger.info("Loading configuration")
+    ConfigurationManager.load()
+
+    logger.info("Starting File system manager")
+    FileSystemManager.init(ConfigurationManager.getConguration())
   }
 }

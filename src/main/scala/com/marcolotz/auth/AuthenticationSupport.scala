@@ -28,4 +28,9 @@ trait AuthenticationSupport extends ScentrySupport[User] with BasicAuthSupport[U
       scentry.strategies("Basic").unauthenticated()
     }
   }
+
+  override protected def registerAuthStrategies = {
+    scentry.register("Basic", app => new ContentServerAuthenticationStrategy(app, realm))
+  }
+
 }

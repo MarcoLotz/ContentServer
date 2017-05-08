@@ -58,4 +58,11 @@ object FileSystemItemFactory {
       "templates/contentFile.jade"
     }
   }
+
+  private class PlayableItem(file: File) extends FileSystemFile(file) {
+    override def getHtmlTemplatePath(): String = {
+      "templates/watchableFile.jade"
+    }
+  }
+
 }

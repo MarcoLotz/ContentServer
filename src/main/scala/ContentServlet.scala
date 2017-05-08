@@ -13,7 +13,7 @@ import org.scalatra.ScalatraServlet
   */
 class ContentServlet extends ScalatraServlet with AuthenticationSupport with LazyLogging {
 
-  before(){
+  before() {
     contentType = "text/html"
   }
 
