@@ -32,7 +32,7 @@ class ContentServlet extends ScalatraServlet with AuthenticationSupport with Laz
       halt(404)
     }).toInt
 
-    val topDirectory = FileSystemManager.getFileFromId(fileId).getOrElse({
+    val topDirectory = FileSystemManager.getFileByItemId(fileId).getOrElse({
       logger.debug("file system item id could not be found in the reported items")
       halt(404)
     })

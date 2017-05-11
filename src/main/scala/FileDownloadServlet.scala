@@ -37,7 +37,7 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
       halt(404)
     })
 
-    val fileSystemItem = FileSystemManager.findFileByItem(fileId.toInt)
+    val fileSystemItem = FileSystemManager.getFileByItemId(fileId.toInt)
 
     fileSystemItem match {
       case Some(fsItem) =>

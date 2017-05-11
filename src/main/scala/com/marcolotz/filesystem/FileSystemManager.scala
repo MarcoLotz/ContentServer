@@ -80,82 +80,29 @@ object FileSystemManager extends LazyLogging {
   private def validPath(item: File): Boolean = item.isAbsolute
 
   /** *
+    * List files recursively
+    * @param f base file for listing
+    * @return
+    */
+  private def recursiveListFiles(f: File): Array[File] = {
+    val these = f.listFiles
+    these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)
+  }
+
+  /** *
     * Explores the file system recursively from top dir
     *
     * @return Map of all the files under the top directory
     */
   def recursivelyExploreFS(topDir: FileSystemItem): Map[Int, FileSystemItem] = {
 
-    def recursiveExploreFS(dirList: List[FileSystemItem],
-                           reportedItemsAcc: Map[Int, FileSystemItem]):
-    Map[Int, FileSystemItem] = {
-      if (dirList.isEmpty) reportedItemsAcc
-      else {
-        val newReportedFiles = exploreDirectory(dirList.head)
-        val directoriesToExplore =
-          dirList.tail ::: (newReportedFiles
-            .filter(entry => entry._2.isDirectory)
-            .map(entry => entry._2).toList)
-
-        recursiveExploreFS(directoriesToExplore, List(reportedItemsAcc, newReportedFiles).
-          flatten.toMap)
-      }
-    }
-
     logger.debug("File system exploration enabled.")
 
-    recursiveExploreFS(List(topDir), Map())
-  }
-
-  /** *
-    * Lists the content of a directory
-    *
-    * @param topDir
-    * @return
-    */
-  def listDirectory(topDir: FileSystemItem): List[FileSystemItem] = {
-    exploreDirectory(topDir).map(entry => entry._2) toList
-  }
-
-  /** *
-    * Explore the files in the directory
-    *
-    * @param topDir
-    * @return a Map of reported files in the directory
-    */
-  private def exploreDirectory(topDir: FileSystemItem): Map[Int, FileSystemItem] = {
-    val dir = new java.io.File(topDir.absolutePath)
-    if (dir.exists() && dir.isDirectory) {
-      val items = reportItems(dir.listFiles().toList)
-
-      // It may be the first time visiting the directory
-      if (!preemptiveFileSystemExploration) {
-        // TODO: Solve the problem of exploring the directory multiple times
-        discoveredFSItems = List(discoveredFSItems, items).flatten.toMap
-      }
-      items
-    }
-    else Map()
-  }
-
-  /** *
-    * generate Map with the files that were just discovered
-    *
-    * @param items
-    * @return
-    */
-  private def reportItems(items: List[File]): Map[Int, FileSystemItem] = {
-    val reportedMap: Map[Int, FileSystemItem] =
-      items.map(item => FileSystemItemFactory(item))
-        .map(item => item.hashCode() -> item).toMap
-
-    // Apply filters
-    val filteredMap = reportedMap.filter(item => applyFilteringFunctions(item._2))
-
-    // Log the final output
-    filteredMap.foreach(entry => logger.debug(
-      "Item being reported: " + entry._2.name + " Path: " + entry._2.absolutePath))
-    filteredMap
+    recursiveListFiles(new File(topDir.absolutePath)).
+      map(FileSystemItemFactory(_)).
+      filter(applyFilteringFunctions(_)).
+      map(item => item.hashCode() -> item).
+      toMap
   }
 
   private def applyFilteringFunctions(item: FileSystemItem): Boolean = {
@@ -164,20 +111,12 @@ object FileSystemManager extends LazyLogging {
   }
 
   /** *
-    * Translates a file ID to a specific file
-    *
-    * @param fileId
-    * @return
-    */
-  def getFileFromId(fileId: Int): Option[FileSystemItem] = discoveredFSItems.get(fileId)
-
-  /** *
     * Finds FileSystemItem by fileid
     *
     * @param fileId
     * @return
     */
-  def findFileByItem(fileId: Int): Option[FileSystemItem] =
+  def getFileByItemId(fileId: Int): Option[FileSystemItem] =
     Option(discoveredFSItems.getOrElse(fileId, null))
 
   // TODO: Check what happens when there are inner files inside
@@ -188,11 +127,6 @@ object FileSystemManager extends LazyLogging {
     * @return the compressed directory
     */
   def getCompressedDirectory(directory: FileSystemItem): File = {
-    // TODO: Check implementation
-    def recursiveListFiles(f: File): Array[File] = {
-      val these = f.listFiles
-      these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)
-    }
 
     def generateRelativePath(item: File): String = {
       item.getAbsolutePath.replace(directory.absolutePath, "")
