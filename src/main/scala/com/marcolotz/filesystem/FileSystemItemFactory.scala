@@ -10,8 +10,15 @@ import org.apache.commons.io.{FileUtils, FilenameUtils}
   */
 object FileSystemItemFactory {
 
+  // TODO: Found a more elegant way to load possible video extensions
+  private val videoExtensions = List("asf", "asx", "avi", "mov",
+    "movie", "mpe", "mpeg", "mpg", "qt", "rv", "ogg", "mp4")
+
   def apply(f: File): FileSystemItem = {
     if (f.isDirectory) new FileSystemDirectory(f)
+    else if (videoExtensions.contains(FilenameUtils.getExtension(f.getAbsolutePath).toLowerCase)){
+      new WatchableItem(f)
+    }
     else new FileSystemFile(f)
   }
 
@@ -52,16 +59,16 @@ object FileSystemItemFactory {
   private class FileSystemFile(file: File) extends FileSystemItemImp(file) {
     override val size = file.length()
     override val humanReadableSize = FileUtils.byteCountToDisplaySize(size)
-    override val extension: String = FilenameUtils.getExtension(file.getAbsolutePath)
+    override val extension: String = FilenameUtils.getExtension(file.getAbsolutePath).toLowerCase
 
     override def getHtmlTemplatePath(): String = {
       "templates/contentFile.jade"
     }
   }
 
-  private class PlayableItem(file: File) extends FileSystemFile(file) {
+  private class WatchableItem(file: File) extends FileSystemFile(file) {
     override def getHtmlTemplatePath(): String = {
-      "templates/watchableFile.jade"
+      "templates/contentStream.jade"
     }
   }
 

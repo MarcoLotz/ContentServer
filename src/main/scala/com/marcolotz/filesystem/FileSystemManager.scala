@@ -77,6 +77,7 @@ object FileSystemManager extends LazyLogging {
     * @param item
     * @return
     */
+  // TODO: Check if works as expected
   private def validPath(item: File): Boolean = item.isAbsolute
 
   /** *
@@ -87,6 +88,15 @@ object FileSystemManager extends LazyLogging {
   private def recursiveListFiles(f: File): Array[File] = {
     val these = f.listFiles
     these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)
+  }
+
+  /** *
+    * Lists the content of a directory
+    * @param topDir
+    * @return
+    */
+  def listDirectory(topDir: FileSystemItem): List[FileSystemItem] = {
+    (new File(topDir.absolutePath)).listFiles().map(FileSystemItemFactory(_)).toList
   }
 
   /** *
