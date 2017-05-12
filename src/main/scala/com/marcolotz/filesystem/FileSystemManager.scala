@@ -61,6 +61,7 @@ object FileSystemManager extends LazyLogging {
       rootFile = FileSystemItemFactory(specifiedRootFile)
     }
 
+    // TODO: Still required to not have preemptive file system exploration?
     if (preemptiveFileSystemExploration) discoveredFSItems = recursivelyExploreFS(rootFile)
 
     // create temp folder for storing compressed directories

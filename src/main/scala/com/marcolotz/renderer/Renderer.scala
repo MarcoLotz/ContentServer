@@ -10,8 +10,18 @@ import org.fusesource.scalate._
   */
 object Renderer {
 
+  /** *
+    * Rendering engine
+    */
   val engine = new TemplateEngine
 
+  /** *
+    * Content server HTML page render
+    *
+    * @param files
+    * @param topDirectory
+    * @return
+    */
   def renderContentServer(files: List[FileSystemItem], topDirectory: FileSystemItem)
   : String = {
     def populateContentItemTemplate(file: FileSystemItem): String = {
@@ -27,8 +37,21 @@ object Renderer {
       Map("innerContent" -> filesystemInfo, "topDirectory" -> topDirectory.absolutePath))
   }
 
+  /** *
+    * Landing page HTML render
+    * @return
+    */
   def renderLandingServer(): String = {
     engine.layout("templates/landingServer.jade")
+  }
+
+  /** *
+    * Renders a HTML page with the playable file
+    * @param playableFile
+    * @return
+    */
+  def renderPlayableFile(playableFile: FileSystemItem): String = {
+    engine.layout("templates/contentStream.jade")
   }
 
 }

@@ -11,6 +11,8 @@ trait FileSystemItem {
 
   def isFile: Boolean
 
+  def isPlayable: Boolean
+
   def humanReadableSize: String
 
   def extension: String

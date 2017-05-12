@@ -28,6 +28,7 @@ class ScalatraBootstrap extends LifeCycle with LazyLogging {
     context.mount(new LandingServlet, "/*")
     context.mount(new ContentServlet, "/content/*")
     context.mount(new FileDownloadServlet, "/download/*")
+    context.mount(new StreamServlet, "/stream/*")
   }
 
   private def configureServer() = {
