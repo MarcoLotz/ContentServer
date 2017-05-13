@@ -22,10 +22,10 @@ class StreamServlet extends ScalatraServlet with AuthenticationSupport with Lazy
 
   /** *
     * Copy file to local stream directory. If already copied does nothing
+    *
     * @param file
     */
-  private def serveStreamFile(file: FileSystemItem) =
-  {
+  private def serveStreamFile(file: FileSystemItem) = {
     // TODO: Check if file already exists
     val fis: FileInputStream = new FileInputStream(file.absolutePath)
 
@@ -48,7 +48,7 @@ class StreamServlet extends ScalatraServlet with AuthenticationSupport with Lazy
       halt(404)
     })
 
-    if (!playableFile.isPlayable){
+    if (!playableFile.isPlayable) {
       logger.debug("file requested is not a playable file")
       halt(404)
     }

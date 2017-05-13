@@ -16,7 +16,7 @@ object FileSystemItemFactory {
 
   def apply(f: File): FileSystemItem = {
     if (f.isDirectory) new FileSystemDirectory(f)
-    else if (videoExtensions.contains(FilenameUtils.getExtension(f.getAbsolutePath).toLowerCase)){
+    else if (videoExtensions.contains(FilenameUtils.getExtension(f.getAbsolutePath).toLowerCase)) {
       new playableItem(f)
     }
     else new FileSystemFile(f)
@@ -69,6 +69,7 @@ object FileSystemItemFactory {
 
   private class playableItem(file: File) extends FileSystemFile(file) {
     override val isPlayable = true
+
     override def getHtmlTemplatePath(): String = {
       "templates/contentStream.jade"
     }

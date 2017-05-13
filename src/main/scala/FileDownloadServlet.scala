@@ -1,9 +1,9 @@
-import java.io.File
+import java.io._
 import java.util.Properties
 
 import com.marcolotz.filesystem.FileSystemManager
 import com.typesafe.scalalogging.LazyLogging
-import org.apache.commons.io.FilenameUtils
+import org.apache.commons.io.{FilenameUtils, IOUtils}
 import org.scalatra.ScalatraServlet
 
 class FileDownloadServlet extends ScalatraServlet with LazyLogging {
@@ -29,8 +29,28 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
   }
 
   // TODO: Change 404 page
-  // TODO: Check for large files
   get("/:fileId") {
+    def serveFile(file: File): Unit = {
+      val outputStream: OutputStream = response.getOutputStream();
+      val inputStream: FileInputStream = new FileInputStream(file)
+      try {
+        if (file.length() > Int.MaxValue) {
+          IOUtils.copyLarge(inputStream, outputStream)
+        }
+        else {
+          IOUtils.copy(inputStream, outputStream)
+        }
+      }
+      catch {
+        case ioe: IOException => logger.error("Exception serving file: "
+          + file.getAbsolutePath + " " + ioe.toString)
+      }
+      finally {
+        inputStream.close()
+        outputStream.close()
+      }
+    }
+
     val fileId = params.getOrElse("fileId", {
       // there's no such resource
       logger.debug("empty value for the parameter fileId.")
@@ -53,13 +73,14 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
               response.setHeader("Content-Disposition",
                 "attachment; filename=" + servedFile.getName()
                   + ".zip")
+              response.setHeader("Content-Encoding", "gzip");
               // TODO: Should a tmp response be sent?
-              FileSystemManager.getCompressedDirectory(fsItem)
+              serveFile(FileSystemManager.getCompressedDirectory(fsItem))
             }
             else {
               response.setHeader("Content-Disposition",
                 "attachment; filename=" + servedFile.getName)
-              servedFile
+              serveFile(servedFile)
             }
           }
           case None => {

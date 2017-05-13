@@ -39,6 +39,7 @@ object Renderer {
 
   /** *
     * Landing page HTML render
+    *
     * @return
     */
   def renderLandingServer(): String = {
@@ -47,6 +48,7 @@ object Renderer {
 
   /** *
     * Renders a HTML page with the playable file
+    *
     * @param playableFile
     * @return
     */

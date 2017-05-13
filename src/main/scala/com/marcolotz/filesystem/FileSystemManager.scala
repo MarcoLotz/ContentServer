@@ -73,26 +73,8 @@ object FileSystemManager extends LazyLogging {
   }
 
   /** *
-    * Prevents relative paths on mount time. Only accepts absolute paths.
-    *
-    * @param item
-    * @return
-    */
-  // TODO: Check if works as expected
-  private def validPath(item: File): Boolean = item.isAbsolute
-
-  /** *
-    * List files recursively
-    * @param f base file for listing
-    * @return
-    */
-  private def recursiveListFiles(f: File): Array[File] = {
-    val these = f.listFiles
-    these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)
-  }
-
-  /** *
     * Lists the content of a directory
+    *
     * @param topDir
     * @return
     */
@@ -116,11 +98,6 @@ object FileSystemManager extends LazyLogging {
       toMap
   }
 
-  private def applyFilteringFunctions(item: FileSystemItem): Boolean = {
-    filteringFunctions.removeExtensions(item) &&
-      filteringFunctions.removeHiddenFiles(item)
-  }
-
   /** *
     * Finds FileSystemItem by fileid
     *
@@ -130,7 +107,6 @@ object FileSystemManager extends LazyLogging {
   def getFileByItemId(fileId: Int): Option[FileSystemItem] =
     Option(discoveredFSItems.getOrElse(fileId, null))
 
-  // TODO: Check what happens when there are inner files inside
   /** *
     * Compress the directory into the tmp folder
     *
@@ -176,6 +152,33 @@ object FileSystemManager extends LazyLogging {
     zip.close()
 
     new File(outputPath)
+  }
+
+  /** *
+    * Prevents relative paths on mount time. Only accepts absolute paths.
+    *
+    * @param item
+    * @return
+    */
+  // TODO: Check if works as expected
+  private def validPath(item: File): Boolean = item.isAbsolute
+
+  /** *
+    * List files recursively
+    *
+    * @param f base file for listing
+    * @return
+    */
+  private def recursiveListFiles(f: File): Array[File] = {
+    val these = f.listFiles
+    these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)
+  }
+
+  // TODO: Check what happens when there are inner files inside
+
+  private def applyFilteringFunctions(item: FileSystemItem): Boolean = {
+    filteringFunctions.removeExtensions(item) &&
+      filteringFunctions.removeHiddenFiles(item)
   }
 
   /** *
