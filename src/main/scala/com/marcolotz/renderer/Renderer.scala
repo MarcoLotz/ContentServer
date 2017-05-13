@@ -51,7 +51,7 @@ object Renderer {
     * @return
     */
   def renderPlayableFile(playableFile: FileSystemItem): String = {
-    engine.layout("templates/contentStream.jade")
+    engine.layout("templates/streamVideo.jade", Map("item" -> playableFile))
   }
 
 }

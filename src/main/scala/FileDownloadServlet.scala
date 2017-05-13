@@ -30,7 +30,7 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
 
   // TODO: Change 404 page
   // TODO: Check for large files
-  get("/*") {
+  get("/:fileId") {
     val fileId = params.getOrElse("fileId", {
       // there's no such resource
       logger.debug("empty value for the parameter fileId.")

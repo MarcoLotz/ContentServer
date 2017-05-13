@@ -25,7 +25,7 @@ class ContentServlet extends ScalatraServlet with AuthenticationSupport with Laz
   /** *
     * shows the content of a given directory, using its file ID
     */
-  get("/directory") {
+  get("/directory/:fileId") {
     val fileId = params.getOrElse("fileId", {
       // there's no such resource
       logger.debug("empty value for the parameter fileId.")

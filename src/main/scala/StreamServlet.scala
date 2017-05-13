@@ -1,5 +1,7 @@
+import java.io.FileInputStream
+
 import com.marcolotz.auth.AuthenticationSupport
-import com.marcolotz.filesystem.FileSystemManager
+import com.marcolotz.filesystem.{FileSystemItem, FileSystemManager}
 import com.marcolotz.renderer.Renderer
 import com.typesafe.scalalogging.LazyLogging
 import org.scalatra.ScalatraServlet
@@ -11,15 +13,30 @@ import org.scalatra.ScalatraServlet
   */
 class StreamServlet extends ScalatraServlet with AuthenticationSupport with LazyLogging {
 
+  val tmpStreamDirectory = "/stream/"
+
   before() {
     // TODO: What content type??
     contentType = "text/html"
   }
 
   /** *
-    * Serve stremaing page for given file
+    * Copy file to local stream directory. If already copied does nothing
+    * @param file
     */
-  get("/") {
+  private def serveStreamFile(file: FileSystemItem) =
+  {
+    // TODO: Check if file already exists
+    val fis: FileInputStream = new FileInputStream(file.absolutePath)
+
+    // TODO: Find a more elegant way to write the file
+    var b: Int = 0;
+    while ((b = fis.read()) != -1) {
+      response.getOutputStream().write(b);
+    }
+  }
+
+  get("/:fileId") {
     val fileId = params.getOrElse("fileId", {
       // there's no such resource
       logger.debug("empty value for the parameter fileId.")
@@ -36,6 +53,8 @@ class StreamServlet extends ScalatraServlet with AuthenticationSupport with Lazy
       halt(404)
     }
 
+    // TODO: Found a more elegant way than data duplication
+    serveStreamFile(playableFile)
     Renderer.renderPlayableFile(playableFile)
   }
 }

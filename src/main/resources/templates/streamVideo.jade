@@ -1,9 +1,11 @@
--@ val item: WatchableItem
+-@ val item: com.marcolotz.filesystem.FileSystemItem
 !!! 5
-html
+html(lang='en')
   head
-    title Content Server
+    title Video Stream
   body
-    h1 #{topDirectory}:
-    <hr>
-    p #{unescape(innerContent)}
+    h1 #{item.name}
+    div(style='text-align:center')
+      video#video1(controls='')
+        #source(src='#{item.absolutePath}' type='video/#{item.extension}')
+        |     Your browser does not support HTML5 video.
