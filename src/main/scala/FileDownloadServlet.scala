@@ -8,19 +8,15 @@ import org.scalatra.ScalatraServlet
 
 class FileDownloadServlet extends ScalatraServlet with LazyLogging {
 
-  // TODO: Probably this is better in the constructor of an object called FileDownloadServlet
-  // Check if this happens every single time the servlet runs
-  // File with known extensions and equivalent response types
+  // Load known extensions
   private val properties: Properties = new Properties()
-
-  logger.debug("Loading extensions")
   properties.load(classOf[FileDownloadServlet].getResourceAsStream("extensions.properties"))
 
   def resolveContentType(resourcePath: String): String = {
     val file = new File(resourcePath)
     if (file.isDirectory) "application/zip"
     else {
-      val extension = Option(properties.get(FilenameUtils.getExtension(resourcePath)))
+      val extension = Option(properties.get(FilenameUtils.getExtension(resourcePath).toLowerCase()))
       extension match {
         case Some(ex) => ex.toString
         case None => "application/octet-stream"
