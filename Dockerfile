@@ -12,9 +12,9 @@ RUN \
   apt-get install git
 
 # Install content server
-  RUN \
-    cd /root && \
-    git clone https://github.com/marcolotz/contentserver
+RUN \
+  cd /root && \
+  git clone https://github.com/marcolotz/contentserver
 
 # Define working directory
 WORKDIR /root
