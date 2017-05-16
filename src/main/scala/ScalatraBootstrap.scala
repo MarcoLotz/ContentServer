@@ -11,13 +11,6 @@ import org.scalatra.LifeCycle
   */
 class ScalatraBootstrap extends LifeCycle with LazyLogging {
 
-  // Entry point of the application
-
-  // TODO: Command line arguments to bypass Json config.
-  // TODO: Find a more elegant way to output messages
-
-  configureServer()
-
   override def init(context: ServletContext) {
     // Register authentications strategies on sentry. The sequence is cascaded
 
@@ -29,13 +22,5 @@ class ScalatraBootstrap extends LifeCycle with LazyLogging {
     context.mount(new ContentServlet, "/content/*")
     context.mount(new FileDownloadServlet, "/download/*")
     context.mount(new StreamServlet, "/stream/*")
-  }
-
-  private def configureServer() = {
-    logger.info("Loading configuration")
-    ConfigurationManager.load()
-
-    logger.info("Starting File system manager")
-    FileSystemManager.init(ConfigurationManager.getConguration())
   }
 }

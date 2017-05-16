@@ -19,7 +19,7 @@ object ConfigurationManager extends LazyLogging {
     *
     * @param path
     */
-  def load(path: String = "conf/config.json"): Unit = {
+  def load(path: String = "conf/config.json", args: Array[String] = Array()): Unit = {
     implicit val formats = DefaultFormats
 
     val jsonString = new String(Files.readAllBytes(Paths.get(path)))

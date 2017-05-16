@@ -1,0 +1,42 @@
+import com.marcolotz.configuration.ConfigurationManager
+import com.marcolotz.filesystem.FileSystemManager
+import com.typesafe.scalalogging.LazyLogging
+import org.eclipse.jetty.server.Server
+import org.eclipse.jetty.servlet.DefaultServlet
+import org.eclipse.jetty.webapp.WebAppContext
+import org.scalatra.servlet.ScalatraListener
+
+/**
+  * Created by prometheus on 15/05/2017.
+  */
+object JettyLauncher extends App with LazyLogging{
+  override def main(args: Array[String]): Unit = {
+    // TODO: Check if it uses the default arguments here
+    configureServer(args)
+
+    val port = ConfigurationManager.getConguration().port
+
+    val server = new Server(port)
+    val context = new WebAppContext()
+
+    context setContextPath "/"
+    context.setResourceBase("/src/main/webapp")
+    context.addEventListener(new ScalatraListener)
+    context.addServlet(classOf[DefaultServlet], "/")
+
+    server.setHandler(context)
+    server.start
+    server.join
+  }
+
+  // TODO: Command line arguments to bypass Json config.
+  // TODO: Find a more elegant way to output messages
+  private def configureServer(args: Array[String]) = {
+    logger.info("Loading configuration")
+    ConfigurationManager.load(args = args)
+
+    logger.info("Starting File system manager")
+    FileSystemManager.init(ConfigurationManager.getConguration())
+  }
+
+}

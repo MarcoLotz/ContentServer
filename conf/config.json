@@ -2,7 +2,7 @@
   "mountPath": "/Users/prometheus/Desktop/videos",
   "tempDirectory": "/Users/prometheus/Desktop/videos/tmp",
   "enableUserAuthentication": false,
-  "port": 8013,
+  "port": 8080,
   "username": "marco",
   "password": "abc",
   "showHiddenFiles": false,

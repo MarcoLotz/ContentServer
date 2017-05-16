@@ -12,7 +12,7 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
   private val properties: Properties = new Properties()
   properties.load(classOf[FileDownloadServlet].getResourceAsStream("extensions.properties"))
 
-  def resolveContentType(resourcePath: String): String = {
+  private def resolveContentType(resourcePath: String): String = {
     val file = new File(resourcePath)
     if (file.isDirectory) "application/zip"
     else {
@@ -69,7 +69,6 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
               response.setHeader("Content-Disposition",
                 "attachment; filename=" + servedFile.getName()
                   + ".zip")
-              response.setHeader("Content-Encoding", "gzip");
               // TODO: Should a tmp response be sent?
               serveFile(FileSystemManager.getCompressedDirectory(fsItem))
             }
