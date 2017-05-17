@@ -1,8 +1,6 @@
 import javax.servlet.ServletContext
 
 import com.marcolotz.ContentServlet
-import com.marcolotz.configuration.ConfigurationManager
-import com.marcolotz.filesystem.FileSystemManager
 import com.typesafe.scalalogging.LazyLogging
 import org.scalatra.LifeCycle
 

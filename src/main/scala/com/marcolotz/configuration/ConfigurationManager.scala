@@ -15,8 +15,8 @@ object ConfigurationManager extends LazyLogging {
   /** *
     * Command line parser options
     */
-  val parser = new scopt.OptionParser[ServerConfiguration]("scopt")
-  {
+  // TODO: Change to mutable parsing
+  val parser = new scopt.OptionParser[ServerConfiguration]("scopt") {
     head("content server", "1.x")
 
     opt[String]('m', "mount").optional.action((x, c) => c.copy(mountPath = x)).
@@ -73,20 +73,11 @@ object ConfigurationManager extends LazyLogging {
     serverConfiguration = updateConfigFromArgs(args, storedJsonConfiguration)
   }
 
-  /** *
-    * Return the configuration parameters
-    *
-    * @return
-    */
-  def getConguration(): ServerConfiguration = {
-    serverConfiguration
-  }
-
   private def updateConfigFromArgs(args: Array[String], jsonStoredConfig: ServerConfiguration)
   : ServerConfiguration = {
     parser.parse(args, ServerConfiguration()) match {
       case Some(config) =>
-      compareWithJson(config, jsonStoredConfig)
+        compareWithJson(config, jsonStoredConfig)
       case None =>
         // TODO: Define here
         logger.debug("parameters error")
@@ -97,10 +88,18 @@ object ConfigurationManager extends LazyLogging {
 
   private def compareWithJson(parsedConfig: ServerConfiguration,
                               jsonStoredConfig: ServerConfiguration):
-  ServerConfiguration =
-  {
+  ServerConfiguration = {
     // TODO overwrite when it has non-default values
     jsonStoredConfig
+  }
+
+  /** *
+    * Return the configuration parameters
+    *
+    * @return
+    */
+  def getConguration(): ServerConfiguration = {
+    serverConfiguration
   }
 
 }

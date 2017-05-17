@@ -9,7 +9,7 @@ import org.scalatra.servlet.ScalatraListener
 /**
   * Created by prometheus on 15/05/2017.
   */
-object JettyLauncher extends App with LazyLogging{
+object JettyLauncher extends App with LazyLogging {
   override def main(args: Array[String]): Unit = {
 
     configureServer(args)
