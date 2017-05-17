@@ -9,6 +9,7 @@ scalaVersion := "2.12.0"
 Seq(webSettings: _*)
 
 libraryDependencies ++= Seq(
+  "com.github.scopt" %% "scopt" % "3.5.0",
   "org.json4s" %% "json4s-jackson" % "3.5.0",
   "ch.qos.logback" % "logback-classic" % "1.2.3",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",

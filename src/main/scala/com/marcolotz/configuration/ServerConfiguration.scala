@@ -1,7 +1,7 @@
 package com.marcolotz.configuration
 
-case class ServerConfiguration(mountPath: String,
-                               tempDirectory: String,
+case class ServerConfiguration(mountPath: String = "",
+                               tempDirectory: String = "",
                                port: Int = 8080,
                                enableUserAuthentication: Boolean = false,
                                username: String = "",

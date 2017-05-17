@@ -11,7 +11,7 @@ import org.scalatra.servlet.ScalatraListener
   */
 object JettyLauncher extends App with LazyLogging{
   override def main(args: Array[String]): Unit = {
-    // TODO: Check if it uses the default arguments here
+
     configureServer(args)
 
     val port = ConfigurationManager.getConguration().port
@@ -19,7 +19,7 @@ object JettyLauncher extends App with LazyLogging{
     val server = new Server(port)
     val context = new WebAppContext()
 
-    context setContextPath "/"
+    context.setContextPath("/")
     context.setResourceBase("/src/main/webapp")
     context.addEventListener(new ScalatraListener)
     context.addServlet(classOf[DefaultServlet], "/")
