@@ -88,7 +88,7 @@ object ConfigurationManager extends LazyLogging {
       // scalastyle:off
       opt[String]('e',"filtered-extensions").optional().foreach(x =>
       c = c.copy(filteredoutExtensions = x.replace("\"", "").split(" +").toList)).
-        text("list of extensions to be ignored, use format \" extension1 extension2\"")
+        text("list of extensions to be ignored, use format \"extension1 extension2\"")
       // scalastyle:on
 
       help("help").text("prints this usage text")
