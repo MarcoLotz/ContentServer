@@ -85,9 +85,11 @@ object ConfigurationManager extends LazyLogging {
         foreach(x => c = c.copy(showHiddenFiles = true)).
         text("list hidden files during file system exploration")
 
-      // TODO: Implement list of extensions
+      // scalastyle:off
       opt[String]('e',"filtered-extensions").optional().foreach(x =>
-      c.copy(filteredoutExtensions = )      //  c.copy(files = c.files :+ x) ).text("optional unbounded args")
+      c = c.copy(filteredoutExtensions = x.replace("\"", "").split(" +").toList)).
+        text("list of extensions to be ignored, use format \" extension1 extension2\"")
+      // scalastyle:on
 
       help("help").text("prints this usage text")
     }
