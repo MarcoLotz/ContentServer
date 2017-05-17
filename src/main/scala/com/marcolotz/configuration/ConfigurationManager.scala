@@ -56,8 +56,8 @@ object ConfigurationManager extends LazyLogging {
       * Command line parser options
       */
     var c = jsonStoredConfig
-    val parser = new scopt.OptionParser[Unit]("scopt") {
-      head("Content Server", "1.x")
+    val parser = new scopt.OptionParser[Unit]("sbt run") {
+      head("Content Server", "1.0")
 
       opt[String]('m', "mount").optional.foreach(x => c = c.copy(mountPath = x)).
         text("file system absolute mounting path")
@@ -86,8 +86,8 @@ object ConfigurationManager extends LazyLogging {
         text("list hidden files during file system exploration")
 
       // TODO: Implement list of extensions
-      // opt[String]('e',"filtered-extensions").unbounded().optional().action( (x, c) =>
-      //  c.copy(files = c.files :+ x) ).text("optional unbounded args")
+      opt[String]('e',"filtered-extensions").optional().foreach(x =>
+      c.copy(filteredoutExtensions = )      //  c.copy(files = c.files :+ x) ).text("optional unbounded args")
 
       help("help").text("prints this usage text")
     }
