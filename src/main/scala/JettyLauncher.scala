@@ -33,10 +33,16 @@ object JettyLauncher extends App with LazyLogging {
   // TODO: Find a more elegant way to output messages
   private def configureServer(args: Array[String]) = {
     logger.info("Loading configuration")
-    ConfigurationManager.load(args = args)
+
+    try {
+      ConfigurationManager.load(args = args)
+    }
+    catch {
+      case e: IllegalArgumentException => System.exit(1)
+      case unkown => unkown.printStackTrace()
+    }
 
     logger.info("Starting File system manager")
     FileSystemManager.init(ConfigurationManager.getConguration())
   }
-
 }
