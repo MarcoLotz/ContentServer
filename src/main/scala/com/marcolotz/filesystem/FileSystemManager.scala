@@ -139,19 +139,23 @@ object FileSystemManager extends LazyLogging {
     val outputFileName = ConfigurationManager.getConguration().tempDirectory + File.pathSeparator +
       directory.name + ".zip"
 
-    val zip: ZipOutputStream = new ZipOutputStream(
-      new FileOutputStream(outputFileName))
+    // If it has not been compressed before, perform compression
+    if(!Files.exists(Paths.get(outputFileName))) {
+      logger.info("compressing to file: " + outputFileName)
+      val zip: ZipOutputStream = new ZipOutputStream(
+        new FileOutputStream(outputFileName))
 
-    try {
-      zipDir(new File(directory.absolutePath), zip)
-    }
-    catch {
-      case e: IOException => logger.error("directory: " + directory.absolutePath +
-        " could not be compressed properly")
-      case unkown => logger.error("compress error " + unkown.printStackTrace())
-    }
-    finally {
-      zip.close()
+      try {
+        zipDir(new File(directory.absolutePath), zip)
+      }
+      catch {
+        case e: IOException => logger.error("directory: " + directory.absolutePath +
+          " could not be compressed properly")
+        case unkown => logger.error("compress error " + unkown.printStackTrace())
+      }
+      finally {
+        zip.close()
+      }
     }
     new File(outputFileName)
   }
