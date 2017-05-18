@@ -7,8 +7,6 @@ import java.util.zip.{ZipEntry, ZipOutputStream}
 import com.marcolotz.configuration.{ConfigurationManager, ServerConfiguration}
 import com.typesafe.scalalogging.LazyLogging
 
-import scala.sys.process.processInternal.IOException
-
 /**
   * Created by prometheus on 20/04/2017.
   */
@@ -109,47 +107,6 @@ object FileSystemManager extends LazyLogging {
   def getFileByItemId(fileId: Int): Option[FileSystemItem] =
     Option(discoveredFSItems.getOrElse(fileId, null))
 
-  /*def getCompressedDirectory(directory: FileSystemItem): File = {
-
-    def generateRelativePath(item: File): String = {
-      item.getAbsolutePath.replace(directory.absolutePath, "")
-    }
-
-    val directoryFile = new File(directory.absolutePath)
-
-    val content = recursiveListFiles(directoryFile)
-
-    // TODO: Make this OS independent?
-    val outputPath: String = ConfigurationManager.getConguration().tempDirectory +
-      "/" +
-      directoryFile.getName + ".zip"
-
-    logger.debug("zipping file: " + directoryFile.getAbsolutePath)
-    logger.debug("zip output dir: " + outputPath)
-
-    val zip = new ZipOutputStream(
-      new FileOutputStream(outputPath))
-
-    // TODO: Fix for recursive directories
-    content.foreach { file =>
-      logger.debug("adding to zip: " + file.getAbsolutePath)
-      zip.putNextEntry(new ZipEntry(generateRelativePath(file)))
-      val in = new BufferedInputStream(new FileInputStream(file.getAbsolutePath))
-      var b = in.read()
-      while (b > -1) {
-        zip.write(b)
-        b = in.read()
-      }
-      in.close()
-      zip.closeEntry()
-    }
-
-    // Write zip to tmp folder
-    zip.close()
-
-    new File(outputPath)
-  }*/
-
   /** *
     * Compress the directory into the tmp folder
     *
@@ -157,7 +114,7 @@ object FileSystemManager extends LazyLogging {
     * @return the compressed directory
     */
   // TODO: What if there is an error in the file compressions?
-  def newGetCompressedDirectory(directory: FileSystemItem): File = {
+  def getCompressedDirectory(directory: FileSystemItem): File = {
 
     def generateRelativePath(item: File): String = {
       item.getAbsolutePath.replace(directory.absolutePath, "")
@@ -179,8 +136,8 @@ object FileSystemManager extends LazyLogging {
       })
     }
 
-    val outputFileName = ConfigurationManager.getConguration().tempDirectory + File.pathSeparator + directory.name + ".zip"
-    )
+    val outputFileName = ConfigurationManager.getConguration().tempDirectory + File.pathSeparator +
+      directory.name + ".zip"
 
     val zip: ZipOutputStream = new ZipOutputStream(
       new FileOutputStream(outputFileName))
@@ -189,7 +146,8 @@ object FileSystemManager extends LazyLogging {
       zipDir(new File(directory.absolutePath), zip)
     }
     catch {
-      case e: IOException => logger.error("directory: " + directory.absolutePath + " could not be compressed properly")
+      case e: IOException => logger.error("directory: " + directory.absolutePath +
+        " could not be compressed properly")
       case unkown => logger.error("compress error " + unkown.printStackTrace())
     }
     finally {
