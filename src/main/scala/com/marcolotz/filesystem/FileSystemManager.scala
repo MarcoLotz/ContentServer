@@ -136,7 +136,7 @@ object FileSystemManager extends LazyLogging {
       })
     }
 
-    val outputFileName = ConfigurationManager.getConguration().tempDirectory + "/" +
+    val outputFileName = ConfigurationManager.getConguration().tempDirectory + File.separator +
       directory.name + ".zip"
 
     // If it has not been compressed before, perform compression
