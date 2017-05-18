@@ -67,8 +67,8 @@ object FileSystemManager extends LazyLogging {
     // create temp folder for storing compressed directories
     // TODO: Create a clean up after exit option, leave it on by default
     val tmpDir = new File(conf.tempDirectory)
-    if (tmpDir.exists()) {
-      tmpDir.getParentFile.mkdirs()
+    if (!tmpDir.exists()) {
+      tmpDir.mkdirs()
     }
   }
 
@@ -136,7 +136,7 @@ object FileSystemManager extends LazyLogging {
       })
     }
 
-    val outputFileName = ConfigurationManager.getConguration().tempDirectory + File.pathSeparator +
+    val outputFileName = ConfigurationManager.getConguration().tempDirectory + "/" +
       directory.name + ".zip"
 
     // If it has not been compressed before, perform compression
