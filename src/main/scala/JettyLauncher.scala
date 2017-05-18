@@ -29,8 +29,6 @@ object JettyLauncher extends App with LazyLogging {
     server.join
   }
 
-  // TODO: Command line arguments to bypass Json config.
-  // TODO: Find a more elegant way to output messages
   private def configureServer(args: Array[String]) = {
     logger.info("Loading configuration")
 

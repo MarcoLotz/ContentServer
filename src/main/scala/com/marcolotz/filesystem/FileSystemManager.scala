@@ -1,11 +1,13 @@
 package com.marcolotz.filesystem
 
-import java.io.{BufferedInputStream, File, FileInputStream, FileOutputStream}
-import java.nio.file.NotDirectoryException
+import java.io._
+import java.nio.file.{Files, NotDirectoryException, Path, Paths}
 import java.util.zip.{ZipEntry, ZipOutputStream}
 
 import com.marcolotz.configuration.{ConfigurationManager, ServerConfiguration}
 import com.typesafe.scalalogging.LazyLogging
+
+import scala.sys.process.processInternal.IOException
 
 /**
   * Created by prometheus on 20/04/2017.
@@ -107,13 +109,7 @@ object FileSystemManager extends LazyLogging {
   def getFileByItemId(fileId: Int): Option[FileSystemItem] =
     Option(discoveredFSItems.getOrElse(fileId, null))
 
-  /** *
-    * Compress the directory into the tmp folder
-    *
-    * @param directory to be compressed
-    * @return the compressed directory
-    */
-  def getCompressedDirectory(directory: FileSystemItem): File = {
+  /*def getCompressedDirectory(directory: FileSystemItem): File = {
 
     def generateRelativePath(item: File): String = {
       item.getAbsolutePath.replace(directory.absolutePath, "")
@@ -152,6 +148,54 @@ object FileSystemManager extends LazyLogging {
     zip.close()
 
     new File(outputPath)
+  }*/
+
+  /** *
+    * Compress the directory into the tmp folder
+    *
+    * @param directory to be compressed
+    * @return the compressed directory
+    */
+  // TODO: What if there is an error in the file compressions?
+  def newGetCompressedDirectory(directory: FileSystemItem): File = {
+
+    def generateRelativePath(item: File): String = {
+      item.getAbsolutePath.replace(directory.absolutePath, "")
+    }
+
+    @throws[IOException]
+    def zipDir(zippedDir: File, zos: ZipOutputStream): Unit = {
+      zippedDir.listFiles().foreach(file => {
+        if (file.isDirectory) {
+          // recursively zip file
+          zipDir(file, zos);
+        }
+        else {
+          zos.putNextEntry(new ZipEntry(generateRelativePath(file)));
+          val filePath: Path = Paths.get(String.valueOf(file));
+          Files.copy(filePath, zos);
+          zos.closeEntry()
+        }
+      })
+    }
+
+    val outputFileName = ConfigurationManager.getConguration().tempDirectory + File.pathSeparator + directory.name + ".zip"
+    )
+
+    val zip: ZipOutputStream = new ZipOutputStream(
+      new FileOutputStream(outputFileName))
+
+    try {
+      zipDir(new File(directory.absolutePath), zip)
+    }
+    catch {
+      case e: IOException => logger.error("directory: " + directory.absolutePath + " could not be compressed properly")
+      case unkown => logger.error("compress error " + unkown.printStackTrace())
+    }
+    finally {
+      zip.close()
+    }
+    new File(outputFileName)
   }
 
   /** *
