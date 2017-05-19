@@ -114,7 +114,7 @@ object FileSystemManager extends LazyLogging {
     * @return the compressed directory
     */
   // TODO: What if there is an error in the file compressions?
-  def getCompressedDirectory(directory: FileSystemItem): File = {
+  def getCompressedDirectory(directory: FileSystemItem): Option[File] = {
 
     def generateRelativePath(item: File): String = {
       item.getAbsolutePath.replace(directory.absolutePath, "")
@@ -157,7 +157,7 @@ object FileSystemManager extends LazyLogging {
         zip.close()
       }
     }
-    new File(outputFileName)
+    Option(new File(outputFileName))
   }
 
   /** *
@@ -179,8 +179,6 @@ object FileSystemManager extends LazyLogging {
     val these = f.listFiles
     these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)
   }
-
-  // TODO: Check what happens when there are inner files inside
 
   private def applyFilteringFunctions(item: FileSystemItem): Boolean = {
     filteringFunctions.removeExtensions(item) &&

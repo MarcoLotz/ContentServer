@@ -69,9 +69,13 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
               response.setHeader("Content-Disposition",
                 "attachment; filename=" + servedFile.getName()
                   + ".zip")
-              // TODO: Should a tmp response be sent?
-              serveFile(FileSystemManager.getCompressedDirectory(fsItem))
-            }
+              val compressedDir = FileSystemManager.getCompressedDirectory(fsItem)
+              compressedDir match {
+                case Some(file) => serveFile(file)
+                // File could not be compressed
+                case None => halt(404)
+              }
+              }
             else {
               response.setHeader("Content-Disposition",
                 "attachment; filename=" + servedFile.getName)
