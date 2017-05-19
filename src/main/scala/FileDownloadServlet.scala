@@ -75,7 +75,7 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
                 // File could not be compressed
                 case None => halt(404)
               }
-              }
+            }
             else {
               response.setHeader("Content-Disposition",
                 "attachment; filename=" + servedFile.getName)

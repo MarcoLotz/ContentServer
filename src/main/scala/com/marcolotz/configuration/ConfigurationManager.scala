@@ -64,6 +64,7 @@ object ConfigurationManager extends LazyLogging {
   def load(path: String = "conf/config.json", args: Array[String] = Array()): Unit = {
     implicit val formats = DefaultFormats
 
+    logger.info("Starting File system manager")
     // load configuration file
     val jsonString = new String(Files.readAllBytes(Paths.get(path)))
     logger.debug(jsonString)
@@ -78,6 +79,16 @@ object ConfigurationManager extends LazyLogging {
         throw new FileNotFoundException(path)
       }
     }
+  }
+
+  /** *
+    * Used to start the application without command line arguments,
+    * just by running sbt container:start instead of sbt run
+    * @param path
+    */
+  def loadAsContainer(path: String = "conf/config.json"): Unit =
+  {
+    if (c == null) load(path)
   }
 
   /** *

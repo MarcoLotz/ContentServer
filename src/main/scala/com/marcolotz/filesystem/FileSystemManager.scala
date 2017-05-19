@@ -140,7 +140,7 @@ object FileSystemManager extends LazyLogging {
       directory.name + ".zip"
 
     // If it has not been compressed before, perform compression
-    if(!Files.exists(Paths.get(outputFileName))) {
+    if (!Files.exists(Paths.get(outputFileName))) {
       logger.info("compressing to file: " + outputFileName)
       val zip: ZipOutputStream = new ZipOutputStream(
         new FileOutputStream(outputFileName))

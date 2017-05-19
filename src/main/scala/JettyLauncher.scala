@@ -39,8 +39,5 @@ object JettyLauncher extends App with LazyLogging {
       case e: IllegalArgumentException => System.exit(1)
       case unkown => unkown.printStackTrace()
     }
-
-    logger.info("Starting File system manager")
-    FileSystemManager.init(ConfigurationManager.getConguration())
   }
 }
