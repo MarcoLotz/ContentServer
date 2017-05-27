@@ -64,7 +64,7 @@ object ConfigurationManager extends LazyLogging {
   def load(path: String = "conf/config.json", args: Array[String] = Array()): Unit = {
     implicit val formats = DefaultFormats
 
-    logger.info("Starting File system manager")
+    logger.debug("Starting File system manager")
     // load configuration file
     val jsonString = new String(Files.readAllBytes(Paths.get(path)))
     logger.debug(jsonString)
