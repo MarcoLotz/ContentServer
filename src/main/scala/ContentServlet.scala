@@ -4,7 +4,7 @@ import com.marcolotz.auth.AuthenticationSupport
 import com.marcolotz.filesystem.FileSystemManager
 import com.marcolotz.renderer.Renderer
 import com.typesafe.scalalogging.LazyLogging
-import org.scalatra.ScalatraServlet
+import org.scalatra.{NotFound, Ok, ScalatraServlet}
 
 
 /** *
@@ -26,19 +26,15 @@ class ContentServlet extends ScalatraServlet with AuthenticationSupport with Laz
     * shows the content of a given directory, using its file ID
     */
   get("/directory/:id") {
-    val fileId = params.getOrElse("id", {
-      // there's no such resource
-      logger.debug("empty value for the parameter fileId.")
-      halt(404)
-    }).toInt
-
-    val topDirectory = FileSystemManager.getFileByItemId(fileId).getOrElse({
-      logger.debug("file system item id could not be found in the reported items")
-      halt(404)
-    })
-
-    val fileList = FileSystemManager.listDirectory(topDirectory)
-
-    Renderer.renderContentServer(fileList, topDirectory)
+    FileSystemManager.getFileByItemId(util.Try(params("id").toInt).getOrElse(0)) match {
+      case Some(topDirectory) => {
+        val fileList = FileSystemManager.listDirectory(topDirectory)
+        Ok(Renderer.renderContentServer(fileList, topDirectory))
+      }
+      case None => {
+        logger.debug("file system item id could not be found in the reported items")
+        NotFound("Sorry, the file could not be found")
+      }
+    }
   }
 }
