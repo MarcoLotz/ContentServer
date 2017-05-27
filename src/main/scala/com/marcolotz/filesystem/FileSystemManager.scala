@@ -31,11 +31,7 @@ object FileSystemManager extends LazyLogging {
     * Filters out a given type of extension
     */
   var filteredoutExtensions: List[String] = List()
-  /** *
-    * Pre analyses all the possible files on init, instead of requiring the user to
-    * access that dir before being able to download it.
-    */
-  var preemptiveFileSystemExploration = true
+
   /** *
     * Stores all the reported items
     */
@@ -45,7 +41,6 @@ object FileSystemManager extends LazyLogging {
   def init(conf: ServerConfiguration): Unit = {
     rootPath = conf.mountPath
     showHiddenFiles = conf.showHiddenFiles
-    preemptiveFileSystemExploration = conf.preemptiveFileSystemExploration
     filteredoutExtensions = conf.filteredoutExtensions.map(x => x.toLowerCase())
 
     val specifiedRootFile = new java.io.File(rootPath)
@@ -60,9 +55,6 @@ object FileSystemManager extends LazyLogging {
     else {
       rootFile = FileSystemItemFactory(specifiedRootFile)
     }
-
-    // TODO: Still required to not have preemptive file system exploration?
-    if (preemptiveFileSystemExploration) discoveredFSItems = recursivelyExploreFS(rootFile)
 
     // create temp folder for storing compressed directories
     // TODO: Create a clean up after exit option, leave it on by default

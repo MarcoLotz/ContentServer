@@ -8,6 +8,5 @@
   "showHiddenFiles": false,
   "filteredoutExtensions": [
     "md"
-  ],
-  "preemptiveFileSystemExploration": true
+  ]
 }
