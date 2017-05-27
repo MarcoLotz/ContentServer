@@ -107,6 +107,19 @@ object FileSystemManager extends LazyLogging {
   def getFileByItemId(fileId: Int): Option[FileSystemItem] =
     Option(discoveredFSItems.getOrElse(fileId, null))
 
+  private def generateRelativePath(parentPath: String, childPath: String): String = {
+    childPath.replace(parentPath, "")
+  }
+
+  /** *
+    * Generate relative path from original root file
+    * @param childPath
+    * @return
+    */
+  def generateRelativePathFromRoot(childPath: String): String = {
+    generateRelativePath(rootPath, childPath)
+  }
+
   /** *
     * Compress the directory into the tmp folder
     *
@@ -116,10 +129,6 @@ object FileSystemManager extends LazyLogging {
   // TODO: What if there is an error in the file compressions?
   def getCompressedDirectory(directory: FileSystemItem): Option[File] = {
 
-    def generateRelativePath(item: File): String = {
-      item.getAbsolutePath.replace(directory.absolutePath, "")
-    }
-
     @throws[IOException]
     def zipDir(zippedDir: File, zos: ZipOutputStream): Unit = {
       zippedDir.listFiles().foreach(file => {
@@ -128,7 +137,8 @@ object FileSystemManager extends LazyLogging {
           zipDir(file, zos);
         }
         else {
-          zos.putNextEntry(new ZipEntry(generateRelativePath(file)));
+          zos.putNextEntry(new ZipEntry(
+            generateRelativePath(file.getAbsolutePath, directory.absolutePath)));
           val filePath: Path = Paths.get(String.valueOf(file));
           Files.copy(filePath, zos);
           zos.closeEntry()

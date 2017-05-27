@@ -1,6 +1,6 @@
 package com.marcolotz.renderer
 
-import com.marcolotz.filesystem.FileSystemItem
+import com.marcolotz.filesystem.{FileSystemItem, FileSystemManager}
 import org.fusesource.scalate._
 
 /** *
@@ -32,9 +32,9 @@ object Renderer {
     val fileInfo: List[String] = files.map(item => populateContentItemTemplate(item))
     val filesystemInfo = fileInfo.mkString(" ")
 
-    // TODO: Better to print relative paths, add as a configuration?
     engine.layout("templates/contentServer.jade",
-      Map("innerContent" -> filesystemInfo, "topDirectory" -> topDirectory.absolutePath))
+      Map("innerContent" -> filesystemInfo, "topDirectory" ->
+        FileSystemManager.generateRelativePathFromRoot(topDirectory.absolutePath)))
   }
 
   /** *
