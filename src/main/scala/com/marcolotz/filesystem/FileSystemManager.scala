@@ -109,7 +109,7 @@ object FileSystemManager extends LazyLogging {
     * @return
     */
   def generateRelativePathFromRoot(childPath: String): String = {
-    generateRelativePath(rootPath, childPath)
+    "~/" + generateRelativePath(rootPath, childPath)
   }
 
   /** *
