@@ -30,8 +30,6 @@ object JettyLauncher extends App with LazyLogging {
   }
 
   private def configureServer(args: Array[String]) = {
-    logger.info("Loading configuration")
-
     try {
       ConfigurationManager.load(args = args)
     }
