@@ -25,7 +25,7 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
   }
 
   // TODO: Change 404 page
-  get("/:fileId") {
+  get("/:id") {
     def serveFile(file: File): Unit = {
       val outputStream: OutputStream = response.getOutputStream();
       val inputStream: FileInputStream = new FileInputStream(file)
@@ -47,7 +47,7 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
       }
     }
 
-    val fileId = params.getOrElse("fileId", {
+    val fileId = params.getOrElse("id", {
       // there's no such resource
       logger.debug("empty value for the parameter fileId.")
       halt(404)

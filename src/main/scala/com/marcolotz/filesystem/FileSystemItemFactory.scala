@@ -43,7 +43,7 @@ object FileSystemItemFactory {
       var hashCode: Int = 1
       hashCode = 31 * hashCode + name.hashCode()
       hashCode = 31 * hashCode + absolutePath.hashCode()
-      return hashCode
+      return Math.abs(hashCode)
     }
   }
 
