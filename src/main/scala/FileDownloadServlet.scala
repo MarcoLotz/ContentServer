@@ -2,9 +2,10 @@ import java.io._
 import java.util.Properties
 
 import com.marcolotz.filesystem.FileSystemManager
+import com.sun.xml.internal.ws.developer.ServerSideException
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.commons.io.{FilenameUtils, IOUtils}
-import org.scalatra.ScalatraServlet
+import org.scalatra.{NotFound, ScalatraServlet}
 
 class FileDownloadServlet extends ScalatraServlet with LazyLogging {
 
@@ -73,7 +74,7 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
               compressedDir match {
                 case Some(file) => serveFile(file)
                 // File could not be compressed
-                case None => halt(404)
+                case None => NotFound("Error compressing file")
               }
             }
             else {

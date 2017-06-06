@@ -56,10 +56,12 @@ object FileSystemManager extends LazyLogging {
       rootFile = FileSystemItemFactory(specifiedRootFile)
     }
 
+    // TODO: Run this in a cyclic thread.
     discoveredFSItems = recursivelyExploreFS(rootFile)
 
     // create temp folder for storing compressed directories
     // TODO: Create a clean up after exit option, leave it on by default
+    // addShutdownHook(Thread hook)
     val tmpDir = new File(conf.tempDirectory)
     if (!tmpDir.exists()) {
       tmpDir.mkdirs()

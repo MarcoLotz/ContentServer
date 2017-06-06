@@ -16,7 +16,6 @@ class StreamServlet extends ScalatraServlet with AuthenticationSupport with Lazy
   val tmpStreamDirectory = "/stream/"
 
   before() {
-    // TODO: What content type??
     contentType = "text/html"
   }
 
