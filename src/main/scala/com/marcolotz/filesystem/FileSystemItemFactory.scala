@@ -10,13 +10,17 @@ import org.apache.commons.io.{FileUtils, FilenameUtils}
   */
 object FileSystemItemFactory {
 
-  // TODO: Found a more elegant way to load possible video extensions
-  private val videoExtensions = List("asf", "asx", "avi", "mov",
-    "movie", "mpe", "mpeg", "mpg", "qt", "rv", "ogg", "mp4")
+  private val playableExtensions = List(
+    // Video formats
+    "mpg", "mpeg", "avi", "wmv", "mov", "rm", "ram",
+    "swf", "flv", "ogg", "webm", "mp4",
+    // Audio Formats
+    "mid", "midi", "wma", "aac", "wav", "mp3")
 
   def apply(f: File): FileSystemItem = {
     if (f.isDirectory) new FileSystemDirectory(f)
-    else if (videoExtensions.contains(FilenameUtils.getExtension(f.getAbsolutePath).toLowerCase)) {
+    else if (playableExtensions.contains(
+      FilenameUtils.getExtension(f.getAbsolutePath).toLowerCase)) {
       new playableItem(f)
     }
     else new FileSystemFile(f)

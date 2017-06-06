@@ -2,7 +2,6 @@ import java.io._
 import java.util.Properties
 
 import com.marcolotz.filesystem.FileSystemManager
-import com.sun.xml.internal.ws.developer.ServerSideException
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.commons.io.{FilenameUtils, IOUtils}
 import org.scalatra.{NotFound, ScalatraServlet}

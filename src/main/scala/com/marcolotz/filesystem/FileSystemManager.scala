@@ -103,12 +103,9 @@ object FileSystemManager extends LazyLogging {
   def getFileByItemId(fileId: Int): Option[FileSystemItem] =
     Option(discoveredFSItems.getOrElse(fileId, null))
 
-  private def generateRelativePath(parentPath: String, childPath: String): String = {
-    childPath.replace(parentPath, "")
-  }
-
   /** *
     * Generate relative path from original root file
+    *
     * @param childPath
     * @return
     */
@@ -164,6 +161,10 @@ object FileSystemManager extends LazyLogging {
       }
     }
     Option(new File(outputFileName))
+  }
+
+  private def generateRelativePath(parentPath: String, childPath: String): String = {
+    childPath.replace(parentPath, "")
   }
 
   /** *

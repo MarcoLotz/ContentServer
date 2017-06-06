@@ -55,6 +55,16 @@ object ConfigurationManager extends LazyLogging {
   private var c: ServerConfiguration = null
 
   /** *
+    * Used to start the application without command line arguments,
+    * just by running sbt container:start instead of sbt run
+    *
+    * @param path
+    */
+  def loadAsContainer(path: String = "conf/config.json"): Unit = {
+    if (c == null) load(path)
+  }
+
+  /** *
     * Load configuration file from path
     *
     * @param path
@@ -79,16 +89,6 @@ object ConfigurationManager extends LazyLogging {
         throw new FileNotFoundException(path)
       }
     }
-  }
-
-  /** *
-    * Used to start the application without command line arguments,
-    * just by running sbt container:start instead of sbt run
-    * @param path
-    */
-  def loadAsContainer(path: String = "conf/config.json"): Unit =
-  {
-    if (c == null) load(path)
   }
 
   /** *
