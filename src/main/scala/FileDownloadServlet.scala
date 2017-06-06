@@ -25,46 +25,41 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
     }
   }
 
-  // TODO: Change 404 page
-  get("/:id") {
-    def serveFile(file: File): Unit = {
-      val outputStream: OutputStream = response.getOutputStream();
-      val inputStream: FileInputStream = new FileInputStream(file)
-      try {
-        if (file.length() > Int.MaxValue) {
-          IOUtils.copyLarge(inputStream, outputStream)
-        }
-        else {
-          IOUtils.copy(inputStream, outputStream)
-        }
+  private def serveFile(file: File): Unit = {
+    val outputStream: OutputStream = response.getOutputStream()
+    val inputStream: FileInputStream = new FileInputStream(file)
+    try {
+      if (file.length() > Int.MaxValue) {
+        IOUtils.copyLarge(inputStream, outputStream)
       }
-      catch {
-        case ioe: IOException => logger.error("Exception serving file: "
-          + file.getAbsolutePath + " " + ioe.toString)
-      }
-      finally {
-        inputStream.close()
-        outputStream.close()
+      else {
+        IOUtils.copy(inputStream, outputStream)
       }
     }
+    catch {
+      case ioe: IOException => logger.error("Exception serving file: "
+        + file.getAbsolutePath + " " + ioe.toString)
+    }
+    finally {
+      inputStream.close()
+      outputStream.close()
+    }
+  }
 
-    val fileId = params.getOrElse("id", {
-      // there's no such resource
-      logger.debug("empty value for the parameter fileId.")
-      halt(404)
-    })
+  // TODO: Change 404 page
+  get("/:id") {
 
-    val fileSystemItem = FileSystemManager.getFileByItemId(fileId.toInt)
+    FileSystemManager.getFileByItemId(util.Try(params("id").toInt).getOrElse(0)) match {
 
-    fileSystemItem match {
       case Some(fsItem) =>
-        logger.debug("Download request of valid explored file.")
+        logger.debug("Content download has been requested")
 
         val optServedFile = Option(new java.io.File(fsItem.absolutePath))
+
         optServedFile match {
           case Some(servedFile) => {
-            logger.debug("File is being downloaded: " + fsItem)
-            contentType = resolveContentType(fileId)
+            logger.debug("File is being downloaded: " + fsItem.name)
+            contentType = resolveContentType(fsItem.absolutePath)
 
             if (servedFile.isDirectory) {
               response.setHeader("Content-Disposition",
@@ -84,13 +79,13 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
             }
           }
           case None => {
-            logger.debug("File could not be provided as byte stream")
-            halt(404)
+            logger.debug("Content could not be provided as byte stream")
+            halt(500)
           }
         }
       case None => {
-        logger.debug("The file has not been explored yet. Is it a direct access?")
-        halt(404)
+        logger.debug("Invalid content download requested")
+        NotFound("Requested content could not be found")
       }
     }
   }
