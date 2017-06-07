@@ -2,7 +2,6 @@ package com.marcolotz.filesystem
 
 import java.io.File
 
-import com.typesafe.scalalogging.LazyLogging
 import org.apache.commons.io.{FileUtils, FilenameUtils}
 
 /**
@@ -26,7 +25,7 @@ object FileSystemItemFactory {
     else new FileSystemFile(f)
   }
 
-  abstract class FileSystemItemImp(file: File) extends LazyLogging with FileSystemItem {
+  abstract class FileSystemItemImp(file: File) extends FileSystemItem {
     override val name = file.getName
     override val isReadable = file.canRead
     override val isDirectory = file.isDirectory
@@ -34,8 +33,6 @@ object FileSystemItemFactory {
     override val isPlayable = false
     override val extension = ""
     override val absolutePath = file.getAbsolutePath()
-
-    logger.debug("item: " + name + "\n\tsize:" + size)
 
     override def equals(that: Any): Boolean =
       that match {

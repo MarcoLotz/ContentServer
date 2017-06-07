@@ -2,6 +2,7 @@ package com.marcolotz.filesystem
 
 import java.io._
 import java.nio.file.{Files, NotDirectoryException, Path, Paths}
+import java.util.concurrent.{Executors, TimeUnit}
 import java.util.zip.{ZipEntry, ZipOutputStream}
 
 import com.marcolotz.configuration.{ConfigurationManager, ServerConfiguration}
@@ -14,6 +15,10 @@ import com.typesafe.scalalogging.LazyLogging
 object FileSystemManager extends LazyLogging {
 
   /** *
+    * Thread for updating filesystem information, every 10 seconds
+    */
+  val executorService = Executors.newSingleThreadScheduledExecutor()
+  /** *
     * Mount entry point for the content server
     */
   var rootPath: String = ""
@@ -21,17 +26,16 @@ object FileSystemManager extends LazyLogging {
     * File at the mount entry point
     */
   var rootFile: FileSystemItem = null
+
+  // Options from the configuration file
   /** *
     * Enables lambda to filter or not hidden files (files starting with '.')
     */
   var showHiddenFiles = false
-
-  // Options from the configuration file
   /** *
     * Filters out a given type of extension
     */
   var filteredoutExtensions: List[String] = List()
-
   /** *
     * Stores all the reported items
     */
@@ -56,8 +60,11 @@ object FileSystemManager extends LazyLogging {
       rootFile = FileSystemItemFactory(specifiedRootFile)
     }
 
-    // TODO: Run this in a cyclic thread.
-    discoveredFSItems = recursivelyExploreFS(rootFile)
+    executorService.scheduleAtFixedRate(new Runnable {
+      def run() = {
+        discoveredFSItems = recursivelyExploreFS(rootFile)
+      }
+    }, 0, 10, TimeUnit.SECONDS)
 
     // create temp folder for storing compressed directories
     // TODO: Create a clean up after exit option, leave it on by default
@@ -84,9 +91,6 @@ object FileSystemManager extends LazyLogging {
     * @return Map of all the files under the top directory
     */
   def recursivelyExploreFS(topDir: FileSystemItem): Map[Int, FileSystemItem] = {
-
-    logger.debug("File system exploration enabled.")
-
     recursiveListFiles(new File(topDir.absolutePath)).
       map(FileSystemItemFactory(_)).
       filter(applyFilteringFunctions(_)).
@@ -119,7 +123,6 @@ object FileSystemManager extends LazyLogging {
     * @param directory to be compressed
     * @return the compressed directory
     */
-  // TODO: What if there is an error in the file compressions?
   def getCompressedDirectory(directory: FileSystemItem): Option[File] = {
 
     @throws[IOException]
