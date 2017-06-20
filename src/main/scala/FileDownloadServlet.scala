@@ -4,25 +4,9 @@ import java.util.Properties
 import com.marcolotz.filesystem.FileSystemManager
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.commons.io.{FilenameUtils, IOUtils}
-import org.scalatra.{NotFound, ScalatraServlet}
+import org.scalatra.{InternalServerError, NotFound, Ok, ScalatraServlet}
 
 class FileDownloadServlet extends ScalatraServlet with LazyLogging {
-
-  // Load known extensions
-  private val properties: Properties = new Properties()
-  properties.load(classOf[FileDownloadServlet].getResourceAsStream("extensions.properties"))
-
-  private def resolveContentType(resourcePath: String): String = {
-    val file = new File(resourcePath)
-    if (file.isDirectory) "application/zip"
-    else {
-      val extension = Option(properties.get(FilenameUtils.getExtension(resourcePath).toLowerCase()))
-      extension match {
-        case Some(ex) => ex.toString
-        case None => "application/octet-stream"
-      }
-    }
-  }
 
   private def serveFile(file: File): Unit = {
     val outputStream: OutputStream = response.getOutputStream()
@@ -58,7 +42,7 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
         optServedFile match {
           case Some(servedFile) => {
             logger.debug("File is being downloaded: " + fsItem.name)
-            contentType = resolveContentType(fsItem.absolutePath)
+            contentType = ResponseHandler.resolveContentType(fsItem.absolutePath)
 
             if (servedFile.isDirectory) {
               response.setHeader("Content-Disposition",
@@ -74,12 +58,12 @@ class FileDownloadServlet extends ScalatraServlet with LazyLogging {
             else {
               response.setHeader("Content-Disposition",
                 "attachment; filename=" + servedFile.getName)
-              serveFile(servedFile)
+              Ok(serveFile(servedFile))
             }
           }
           case None => {
             logger.debug("Content could not be provided as byte stream")
-            halt(500)
+            InternalServerError("Content could not be provided as byte stream")
           }
         }
       case None => {

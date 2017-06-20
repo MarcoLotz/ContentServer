@@ -20,7 +20,7 @@ object FileSystemItemFactory {
     if (f.isDirectory) new FileSystemDirectory(f)
     else if (playableExtensions.contains(
       FilenameUtils.getExtension(f.getAbsolutePath).toLowerCase)) {
-      new playableItem(f)
+      new PlayableItem(f)
     }
     else new FileSystemFile(f)
   }
@@ -68,7 +68,7 @@ object FileSystemItemFactory {
     }
   }
 
-  private class playableItem(file: File) extends FileSystemFile(file) {
+  private class PlayableItem(file: File) extends FileSystemFile(file) {
     override val isPlayable = true
 
     override def getHtmlTemplatePath(): String = {
