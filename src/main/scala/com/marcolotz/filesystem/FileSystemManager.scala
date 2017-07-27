@@ -157,7 +157,7 @@ object FileSystemManager extends LazyLogging {
       catch {
         case e: IOException => logger.error("directory: " + directory.absolutePath +
           " could not be compressed properly")
-        case unkown => logger.error("compress error " + unkown.printStackTrace())
+        case unknown => logger.error("compress error " + unknown.printStackTrace())
       }
       finally {
         zip.close()
@@ -188,6 +188,29 @@ object FileSystemManager extends LazyLogging {
   private def recursiveListFiles(f: File): Array[File] = {
     val these = f.listFiles
     these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)
+  }
+
+  /** *
+    * Generates a symbolic link to the file system item, on the mounted streaming
+    * directory
+    *
+    * @param item
+    */
+  def generateStreamLink(item: FileSystemItem): File = {
+    val linkedFile = new File("stream-content/" + item.name)
+    if (!linkedFile.exists()) {
+      try {
+        Files.createSymbolicLink(linkedFile.toPath,
+          Paths.get(item.absolutePath));
+      }
+      catch {
+        case e: IOException => logger.error("stream file: " + item.absolutePath +
+          " could not generate symbolic link")
+        case e: UnsupportedOperationException => logger.
+          error("symbolic link error" + e.printStackTrace())
+      }
+    }
+    linkedFile
   }
 
   private def applyFilteringFunctions(item: FileSystemItem): Boolean = {
