@@ -16,6 +16,13 @@ object Renderer {
   val engine = new TemplateEngine
 
   /** *
+    * Template Paths
+    */
+  val landingServerTemplatePath = "templates/landingServer.jade"
+  val contentServerTemplatePath = "templates/contentServer.jade"
+  val streamFileTemplatePath = "templates/streamVideo.jade"
+
+  /** *
     * Content server HTML page render
     *
     * @param files
@@ -32,7 +39,7 @@ object Renderer {
     val fileInfo: List[String] = files.map(item => populateContentItemTemplate(item))
     val filesystemInfo = fileInfo.mkString(" ")
 
-    engine.layout("templates/contentServer.jade",
+    engine.layout(contentServerTemplatePath,
       Map("innerContent" -> filesystemInfo, "topDirectory" ->
         FileSystemManager.generateRelativePathFromRoot(topDirectory.absolutePath)))
   }
@@ -43,7 +50,7 @@ object Renderer {
     * @return
     */
   def renderLandingServer(): String = {
-    engine.layout("templates/landingServer.jade")
+    engine.layout(landingServerTemplatePath)
   }
 
   /** *
@@ -53,6 +60,6 @@ object Renderer {
     * @return
     */
   def renderStream(playableFile: FileSystemItem): String = {
-    engine.layout("templates/streamVideo.jade", Map("item" -> playableFile))
+    engine.layout(streamFileTemplatePath, Map("item" -> playableFile))
   }
 }

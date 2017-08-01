@@ -68,6 +68,7 @@ object FileSystemManager extends LazyLogging {
 
     // create temp folder for storing compressed directories
     // TODO: Create a clean up after exit option, leave it on by default
+    // TODO: Clean up temporary compressed files and symbolic links
     // addShutdownHook(Thread hook)
     val tmpDir = new File(conf.tempDirectory)
     if (!tmpDir.exists()) {
