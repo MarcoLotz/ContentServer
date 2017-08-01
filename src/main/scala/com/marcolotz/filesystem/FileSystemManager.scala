@@ -11,7 +11,6 @@ import com.typesafe.scalalogging.LazyLogging
 /**
   * Created by Marco Lotz on 20/04/2017.
   */
-// TODO: Write unit tests for this
 object FileSystemManager extends LazyLogging {
 
   /** *
@@ -49,16 +48,17 @@ object FileSystemManager extends LazyLogging {
 
     val specifiedRootFile = new java.io.File(rootPath)
 
-    if ((!specifiedRootFile.exists && !specifiedRootFile.isDirectory) ||
-      !validPath(specifiedRootFile)) {
-      throw new NotDirectoryException(
-        "file "
+    // TODO: Refactor
+    if(!specifiedRootFile.exists) throw new NotDirectoryException("file "
+        + specifiedRootFile.getAbsolutePath
+        + " does not exist")
+    else if (!specifiedRootFile.isDirectory) throw new NotDirectoryException("file "
+        + specifiedRootFile.getAbsolutePath
+        + " is not a directory")
+    else if (!validPath(specifiedRootFile)) throw new NotDirectoryException("file "
           + specifiedRootFile.getAbsolutePath
-          + " is not a directory")
-    }
-    else {
-      rootFile = FileSystemItemFactory(specifiedRootFile)
-    }
+          + " is using a relative path")
+    else rootFile = FileSystemItemFactory(specifiedRootFile)
 
     executorService.scheduleAtFixedRate(new Runnable {
       def run() = {
@@ -215,14 +215,15 @@ object FileSystemManager extends LazyLogging {
   }
 
   private def applyFilteringFunctions(item: FileSystemItem): Boolean = {
-    filteringFunctions.removeExtensions(item) &&
-      filteringFunctions.removeHiddenFiles(item)
+    filteringFunctions.removeExtensions(item) /* &&
+    filteringFunctions.removeHiddenFiles(item) */
   }
 
   /** *
     * Filtering options enabled in the configuration files
     */
   private object filteringFunctions extends LazyLogging {
+
     /** *
       * Filters out hidden files from reports when enabled
       *

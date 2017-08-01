@@ -2,12 +2,13 @@ package com.marcolotz.filesystem
 
 import java.io.File
 
+import com.typesafe.scalalogging.LazyLogging
 import org.apache.commons.io.{FileUtils, FilenameUtils}
 
 /**
   * Created by Marco Lotz on 26/04/2017.
   */
-object FileSystemItemFactory {
+object FileSystemItemFactory extends LazyLogging{
 
   private val playableExtensions = List(
     // Video formats
