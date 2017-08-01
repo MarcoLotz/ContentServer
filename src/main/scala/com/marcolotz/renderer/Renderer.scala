@@ -13,14 +13,14 @@ object Renderer {
   /** *
     * Rendering engine
     */
-  val engine = new TemplateEngine
+  private val engine = new TemplateEngine
 
   /** *
     * Template Paths
     */
-  val landingServerTemplatePath = "templates/landingServer.jade"
-  val contentServerTemplatePath = "templates/contentServer.jade"
-  val streamFileTemplatePath = "templates/streamVideo.jade"
+  private val landingServerTemplatePath = "templates/landingServer.jade"
+  private val contentServerTemplatePath = "templates/contentServer.jade"
+  private val streamFileTemplatePath = "templates/streamVideo.jade"
 
   /** *
     * Content server HTML page render
