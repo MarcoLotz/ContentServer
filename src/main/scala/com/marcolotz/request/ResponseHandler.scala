@@ -6,7 +6,7 @@ import java.util.Properties
 import org.apache.commons.io.FilenameUtils
 
 /**
-  * Created by prometheus on 08/06/2017.
+  * Created by Marco Lotz on 08/06/2017.
   */
 object ResponseHandler {
 

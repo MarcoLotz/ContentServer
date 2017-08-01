@@ -6,7 +6,7 @@ import org.eclipse.jetty.webapp.WebAppContext
 import org.scalatra.servlet.ScalatraListener
 
 /**
-  * Created by prometheus on 15/05/2017.
+  * Created by Marco Lotz on 15/05/2017.
   */
 object JettyLauncher extends App with LazyLogging {
   override def main(args: Array[String]): Unit = {

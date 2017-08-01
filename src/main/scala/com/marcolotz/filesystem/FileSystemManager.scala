@@ -9,7 +9,7 @@ import com.marcolotz.configuration.{ConfigurationManager, ServerConfiguration}
 import com.typesafe.scalalogging.LazyLogging
 
 /**
-  * Created by prometheus on 20/04/2017.
+  * Created by Marco Lotz on 20/04/2017.
   */
 // TODO: Write unit tests for this
 object FileSystemManager extends LazyLogging {

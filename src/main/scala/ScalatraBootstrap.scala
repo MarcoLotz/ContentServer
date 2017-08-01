@@ -7,7 +7,7 @@ import com.typesafe.scalalogging.LazyLogging
 import org.scalatra.LifeCycle
 
 /**
-  * Created by prometheus on 19/04/2017.
+  * Created by Marco Lotz on 19/04/2017.
   */
 class ScalatraBootstrap extends LifeCycle with LazyLogging {
 

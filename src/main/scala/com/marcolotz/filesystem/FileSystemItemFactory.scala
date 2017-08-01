@@ -5,7 +5,7 @@ import java.io.File
 import org.apache.commons.io.{FileUtils, FilenameUtils}
 
 /**
-  * Created by prometheus on 26/04/2017.
+  * Created by Marco Lotz on 26/04/2017.
   */
 object FileSystemItemFactory {
 

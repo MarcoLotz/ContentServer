@@ -8,7 +8,7 @@ import org.json4s._
 import org.json4s.jackson.Serialization.read
 
 /**
-  * Created by prometheus on 19/04/2017.
+  * Created by Marco Lotz on 19/04/2017.
   */
 object ConfigurationManager extends LazyLogging {
 

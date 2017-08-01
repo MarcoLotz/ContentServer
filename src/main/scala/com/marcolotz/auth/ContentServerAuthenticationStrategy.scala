@@ -6,7 +6,7 @@ import org.scalatra.ScalatraBase
 import org.scalatra.auth.strategy.BasicAuthStrategy
 
 /**
-  * Created by prometheus on 04/05/2017.
+  * Created by Marco Lotz on 04/05/2017.
   */
 class ContentServerAuthenticationStrategy(protected override val app: ScalatraBase, realm: String)
   extends BasicAuthStrategy[User](app, realm) {
