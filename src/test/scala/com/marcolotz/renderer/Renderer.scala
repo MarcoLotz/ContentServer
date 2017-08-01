@@ -2,21 +2,16 @@ package com.marcolotz.renderer
 
 import java.io.File
 
+import com.marcolotz.ContentServerTest
 import com.marcolotz.filesystem.{FileSystemItem, FileSystemItemFactory}
-import org.scalatest.{BeforeAndAfterAll, FunSuite}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-
-import scala.io.Source
 
 /**
   * Created by Marco Lotzon 01/08/2017.
   */
 @RunWith(classOf[JUnitRunner])
-class RendererTest extends FunSuite{
-
-  private def getFileFromResources(path: String): FileSystemItem =
-    FileSystemItemFactory(new File(getClass.getResource(path).getFile))
+class RendererTest extends ContentServerTest{
 
   test("rendered welcome page")(assert(Renderer.renderLandingServer.contains("html")))
 

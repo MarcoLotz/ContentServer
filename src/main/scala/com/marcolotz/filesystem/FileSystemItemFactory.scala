@@ -48,7 +48,7 @@ object FileSystemItemFactory {
     }
   }
 
-  private class FileSystemDirectory(file: File) extends FileSystemItemImp(file) {
+  protected class FileSystemDirectory(file: File) extends FileSystemItemImp(file) {
 
     override val size = FileUtils.sizeOfDirectory(file)
     override val humanReadableSize = FileUtils.byteCountToDisplaySize(size)
@@ -58,7 +58,7 @@ object FileSystemItemFactory {
     }
   }
 
-  private class FileSystemFile(file: File) extends FileSystemItemImp(file) {
+  protected class FileSystemFile(file: File) extends FileSystemItemImp(file) {
     override val size = file.length()
     override val humanReadableSize = FileUtils.byteCountToDisplaySize(size)
     override val extension: String = FilenameUtils.getExtension(file.getAbsolutePath).toLowerCase
@@ -68,7 +68,7 @@ object FileSystemItemFactory {
     }
   }
 
-  private class PlayableItem(file: File) extends FileSystemFile(file) {
+  protected class PlayableItem(file: File) extends FileSystemFile(file) {
     override val isPlayable = true
 
     override def getHtmlTemplatePath(): String = {
