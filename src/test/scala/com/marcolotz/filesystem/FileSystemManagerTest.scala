@@ -46,7 +46,7 @@ class FileSystemManagerTest extends FunSuite with BeforeAndAfterAll {
       item._2.extension == "test") === 2)
   }
 
-  test("test hidden files"){
+  ignore ("test hidden files"){
     val files = FileSystemManager.discoveredFSItems.map(item => item._2).
       map(file => file.name).toList
     assert(files.contains("hidden"))
