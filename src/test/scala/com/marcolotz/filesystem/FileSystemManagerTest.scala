@@ -16,7 +16,7 @@ class FileSystemManagerTest extends ContentServerTest with BeforeAndAfterAll {
 
   val conf: ServerConfiguration = ServerConfiguration(
     mountPath = testResourcesPath.getAbsolutePath,
-    tempDirectory = testResourcesPath.getAbsolutePath + "/tmp",
+    tempDirectory = "tmp",
     showHiddenFiles = true,
     filteredoutExtensions = List("hpptest"))
 
@@ -72,7 +72,7 @@ class FileSystemManagerTest extends ContentServerTest with BeforeAndAfterAll {
     assert(path === "test/documents")
   }
 
-  test("Test sream link generation") {
+  test("Test stream link generation") {
     val streamFile = getFileFromResources("/innerDir/file4.mp4")
     val file = FileSystemManager.generateStreamLink(streamFile)
 

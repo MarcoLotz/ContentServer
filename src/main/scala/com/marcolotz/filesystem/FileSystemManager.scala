@@ -67,33 +67,33 @@ object FileSystemManager extends LazyLogging {
     }, 0, 10, TimeUnit.SECONDS)
 
     // create temp folder for storing compressed and streaming files
-    setupDirectoryStructure()
+    setupDirectoryStructure(conf)
 
     // Clean up on every single start:
-    cleanUp()
+    cleanUp(conf)
 
     // Add shutdown hook for clean up on exit
-    sys.addShutdownHook(cleanUp())
+    sys.addShutdownHook(cleanUp(conf))
     val tmpDir = new File(conf.tempDirectory)
     if (!tmpDir.exists()) {
       tmpDir.mkdirs()
     }
   }
 
-  private def setupDirectoryStructure() = {
+  private def setupDirectoryStructure(conf: ServerConfiguration) = {
     // create stream directory
     val f = new File("stream-content")
     if (!f.exists()) f.mkdir()
 
     // create compressed files directory
-    val comp = new File(ConfigurationManager.getConguration().tempDirectory)
+    val comp = new File(conf.tempDirectory)
     if (!comp.exists()) comp.mkdir()
   }
 
-  private def cleanUp() = {
+  private def cleanUp(conf: ServerConfiguration) = {
     logger.debug("File system manager shutdown hook initiated")
     cleanStream()
-    cleanCompressed()
+    cleanCompressed(conf)
     logger.debug("File system manager is ready for shutdown")
   }
 
@@ -106,8 +106,8 @@ object FileSystemManager extends LazyLogging {
     logger.debug("  Finishing cleaning stream directory")
   }
 
-  private def cleanCompressed() = {
-    val content = new File(ConfigurationManager.getConguration().tempDirectory)
+  private def cleanCompressed(conf: ServerConfiguration) = {
+    val content = new File(conf.tempDirectory)
 
     // Remove compressed files from directory
     val links = content.listFiles().map(_.toPath) map (Files.delete)
@@ -195,7 +195,6 @@ object FileSystemManager extends LazyLogging {
       catch {
         case e: IOException => logger.error("directory: " + directory.absolutePath +
           " could not be compressed properly")
-        case unknown => logger.error("compress error " + unknown.printStackTrace())
       }
       finally {
         zip.close()
