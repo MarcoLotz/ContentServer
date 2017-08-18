@@ -1,10 +1,11 @@
 package com.marcolotz.filesystem
 
 import java.io.File
+import java.nio.file.Files
 
 import com.marcolotz.ContentServerTest
 import com.marcolotz.configuration.ServerConfiguration
-import org.scalatest.BeforeAndAfterAll
+import org.scalatest.{BeforeAndAfterAll, PrivateMethodTester}
 
 /**
   * Created by Marco Lotz on 01/08/2017.
@@ -26,7 +27,16 @@ class FileSystemManagerTest extends ContentServerTest with BeforeAndAfterAll {
   }
 
   override def afterAll() {
+    cleanStream()
     super.afterAll()
+  }
+
+  private def cleanStream(): Unit = {
+    val content = new File("stream-content/")
+
+    // Remove symbolic links
+    val links = content.listFiles().map(_.toPath).filter(Files.isSymbolicLink).
+      map(Files.delete)
   }
 
   test("Test filesystem initialization") {
