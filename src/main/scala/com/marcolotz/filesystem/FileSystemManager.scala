@@ -49,15 +49,15 @@ object FileSystemManager extends LazyLogging {
     val specifiedRootFile = new java.io.File(rootPath)
 
     // TODO: Refactor
-    if(!specifiedRootFile.exists) throw new NotDirectoryException("file "
-        + specifiedRootFile.getAbsolutePath
-        + " does not exist")
+    if (!specifiedRootFile.exists) throw new NotDirectoryException("file "
+      + specifiedRootFile.getAbsolutePath
+      + " does not exist")
     else if (!specifiedRootFile.isDirectory) throw new NotDirectoryException("file "
-        + specifiedRootFile.getAbsolutePath
-        + " is not a directory")
+      + specifiedRootFile.getAbsolutePath
+      + " is not a directory")
     else if (!validPath(specifiedRootFile)) throw new NotDirectoryException("file "
-          + specifiedRootFile.getAbsolutePath
-          + " is using a relative path")
+      + specifiedRootFile.getAbsolutePath
+      + " is using a relative path")
     else rootFile = FileSystemItemFactory(specifiedRootFile)
 
     executorService.scheduleAtFixedRate(new Runnable {
@@ -66,14 +66,52 @@ object FileSystemManager extends LazyLogging {
       }
     }, 0, 10, TimeUnit.SECONDS)
 
-    // create temp folder for storing compressed directories
-    // TODO: Create a clean up after exit option, leave it on by default
-    // TODO: Clean up temporary compressed files and symbolic links
-    // addShutdownHook(Thread hook)
+    // create temp folder for storing compressed and streaming files
+    setupDirectoryStructure()
+
+    // Clean up on every single start:
+    cleanUp()
+
+    // Add shutdown hook for clean up on exit
+    sys.addShutdownHook(cleanUp())
     val tmpDir = new File(conf.tempDirectory)
     if (!tmpDir.exists()) {
       tmpDir.mkdirs()
     }
+  }
+
+  private def setupDirectoryStructure() = {
+    // create stream directory
+    val f = new File("stream-content")
+    if (!f.exists()) f.mkdir()
+
+    // create compressed files directory
+    val comp = new File(ConfigurationManager.getConguration().tempDirectory)
+    if (!comp.exists()) comp.mkdir()
+  }
+
+  private def cleanUp() = {
+    logger.debug("File system manager shutdown hook initiated")
+    cleanStream()
+    cleanCompressed()
+    logger.debug("File system manager is ready for shutdown")
+  }
+
+  private def cleanStream() = {
+    val content = new File("stream-content/")
+
+    // Remove symbolic links
+    val links = content.listFiles().map(_.toPath).filter(Files.isSymbolicLink).
+      map(Files.delete)
+    logger.debug("  Finishing cleaning stream directory")
+  }
+
+  private def cleanCompressed() = {
+    val content = new File(ConfigurationManager.getConguration().tempDirectory)
+
+    // Remove compressed files from directory
+    val links = content.listFiles().map(_.toPath) map (Files.delete)
+    logger.debug("  Finishing cleaning compressed directory")
   }
 
   /** *
@@ -114,9 +152,8 @@ object FileSystemManager extends LazyLogging {
     * @param childPath
     * @return
     */
-  def generateRelativePathFromRoot(childPath: String): String = {
-    "~/" + generateRelativePath(rootPath, childPath)
-  }
+  def generateRelativePathFromRoot(childPath: String): String =
+    generateRelativePath(rootPath, childPath)
 
   /** *
     * Compress the directory into the tmp folder
@@ -177,7 +214,6 @@ object FileSystemManager extends LazyLogging {
     * @param item
     * @return
     */
-  // TODO: Check if works as expected
   private def validPath(item: File): Boolean = item.isAbsolute
 
   /** *
@@ -215,8 +251,8 @@ object FileSystemManager extends LazyLogging {
   }
 
   private def applyFilteringFunctions(item: FileSystemItem): Boolean = {
-    filteringFunctions.removeExtensions(item) /* &&
-    filteringFunctions.removeHiddenFiles(item) */
+    filteringFunctions.removeExtensions(item) &&
+      filteringFunctions.removeHiddenFiles(item)
   }
 
   /** *
