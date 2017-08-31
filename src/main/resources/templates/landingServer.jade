@@ -1,12 +1,13 @@
 !!! 5
-html
+html(lang='en')
   head
     title Content Server
   body
     h1 Content Server:
-    <hr>
-    p Choose one of the following options:
+    hr
+    p.choose Choose one of the following options:
     br
-    a(href='content') Content Server
-    p request download to server
-    p access logs
+    p.option
+      a(href='content') Files
+    p.option request download to server
+    p.option access logs
