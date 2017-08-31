@@ -91,7 +91,7 @@ class FileSystemManagerTest extends ContentServerTest with BeforeAndAfterAll {
     assert(file.getAbsolutePath.contains("stream-content/file4.mp4"))
   }
 
-  ignore("Test get Compressed Directory") {
+  ignore("Test get compressed directory") {
 
   }
 }
