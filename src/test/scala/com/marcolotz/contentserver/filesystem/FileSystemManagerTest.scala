@@ -3,6 +3,7 @@ package com.marcolotz.contentserver.filesystem
 import java.io.File
 import java.nio.file.Files
 
+import com.marcolotz.contentserver.configuration.ServerConfiguration
 import com.marcolotz.contentserver.renderer.ContentServerTest
 import org.scalatest.BeforeAndAfterAll
 
