@@ -1,4 +1,4 @@
-package com.marcolotz.configuration
+package com.marcolotz.contentserver.configuration
 
 case class ServerConfiguration(mountPath: String = "",
                                tempDirectory: String = "",

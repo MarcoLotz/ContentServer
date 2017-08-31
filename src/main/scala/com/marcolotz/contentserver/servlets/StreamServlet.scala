@@ -1,6 +1,8 @@
-import com.marcolotz.auth.AuthenticationSupport
-import com.marcolotz.filesystem.{FileSystemItem, FileSystemManager}
-import com.marcolotz.renderer.Renderer
+package com.marcolotz.contentserver.servlets
+
+import com.marcolotz.contentserver.auth.AuthenticationSupport
+import com.marcolotz.contentserver.filesystem.{FileSystemItem, FileSystemManager}
+import com.marcolotz.contentserver.renderer.Renderer
 import com.typesafe.scalalogging.LazyLogging
 import org.scalatra.{InternalServerError, NotFound, ScalatraServlet}
 

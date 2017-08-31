@@ -5,6 +5,7 @@ import java.nio.file.Files
 
 import com.marcolotz.ContentServerTest
 import com.marcolotz.configuration.ServerConfiguration
+import com.marcolotz.contentserver.filesystem.{FileSystemItemFactory, FileSystemManager}
 import org.scalatest.{BeforeAndAfterAll, PrivateMethodTester}
 
 /**

@@ -1,4 +1,4 @@
-package com.marcolotz.filesystem
+package com.marcolotz.contentserver.filesystem
 
 import java.io.File
 

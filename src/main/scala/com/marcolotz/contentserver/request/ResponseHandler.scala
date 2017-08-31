@@ -1,9 +1,11 @@
-import java.io.File
+package com.marcolotz.contentserver.request
 
-import scala.io.Source
+import java.io.File
 import java.util.Properties
 
 import org.apache.commons.io.FilenameUtils
+
+import scala.io.Source
 
 /**
   * Created by Marco Lotz on 08/06/2017.

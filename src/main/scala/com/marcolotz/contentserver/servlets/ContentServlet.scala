@@ -1,8 +1,8 @@
-package com.marcolotz
+package com.marcolotz.contentserver.servlets
 
-import com.marcolotz.auth.AuthenticationSupport
-import com.marcolotz.filesystem.FileSystemManager
-import com.marcolotz.renderer.Renderer
+import com.marcolotz.contentserver.auth.AuthenticationSupport
+import com.marcolotz.contentserver.filesystem.FileSystemManager
+import com.marcolotz.contentserver.renderer.Renderer
 import com.typesafe.scalalogging.LazyLogging
 import org.scalatra.{NotFound, Ok, ScalatraServlet}
 

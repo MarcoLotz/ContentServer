@@ -1,4 +1,4 @@
-package com.marcolotz.auth
+package com.marcolotz.contentserver.auth
 
 import org.scalatra.ScalatraBase
 import org.scalatra.auth.strategy.BasicAuthSupport

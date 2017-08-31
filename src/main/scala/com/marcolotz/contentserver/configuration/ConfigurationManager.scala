@@ -1,4 +1,4 @@
-package com.marcolotz.configuration
+package com.marcolotz.contentserver.configuration
 
 import java.io.FileNotFoundException
 import java.nio.file.{Files, Paths}

@@ -1,5 +1,7 @@
-import com.marcolotz.auth.AuthenticationSupport
-import com.marcolotz.renderer.Renderer
+package com.marcolotz.contentserver.servlets
+
+import com.marcolotz.contentserver.auth.AuthenticationSupport
+import com.marcolotz.contentserver.renderer.Renderer
 import org.scalatra.ScalatraServlet
 
 class LandingServlet extends ScalatraServlet with AuthenticationSupport {

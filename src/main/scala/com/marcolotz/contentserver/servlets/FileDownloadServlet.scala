@@ -1,7 +1,10 @@
+package com.marcolotz.contentserver.servlets
+
 import java.io._
 
-import com.marcolotz.auth.AuthenticationSupport
-import com.marcolotz.filesystem.FileSystemManager
+import com.marcolotz.contentserver.auth.AuthenticationSupport
+import com.marcolotz.contentserver.filesystem.FileSystemManager
+import com.marcolotz.contentserver.request.ResponseHandler
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.commons.io.IOUtils
 import org.scalatra.{InternalServerError, NotFound, Ok, ScalatraServlet}

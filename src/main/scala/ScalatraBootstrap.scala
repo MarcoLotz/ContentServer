@@ -1,8 +1,8 @@
 import javax.servlet.ServletContext
 
-import com.marcolotz.ContentServlet
-import com.marcolotz.configuration.ConfigurationManager
-import com.marcolotz.filesystem.FileSystemManager
+import com.marcolotz.contentserver.configuration.ConfigurationManager
+import com.marcolotz.contentserver.filesystem.FileSystemManager
+import com.marcolotz.contentserver.servlets.{ContentServlet, FileDownloadServlet, LandingServlet, StreamServlet}
 import com.typesafe.scalalogging.LazyLogging
 import org.scalatra.LifeCycle
 

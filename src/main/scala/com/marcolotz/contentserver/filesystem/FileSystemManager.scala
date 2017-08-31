@@ -1,11 +1,11 @@
-package com.marcolotz.filesystem
+package com.marcolotz.contentserver.filesystem
 
 import java.io._
 import java.nio.file.{Files, NotDirectoryException, Path, Paths}
 import java.util.concurrent.{Executors, TimeUnit}
 import java.util.zip.{ZipEntry, ZipOutputStream}
 
-import com.marcolotz.configuration.{ConfigurationManager, ServerConfiguration}
+import com.marcolotz.contentserver.configuration.{ConfigurationManager, ServerConfiguration}
 import com.typesafe.scalalogging.LazyLogging
 
 /**

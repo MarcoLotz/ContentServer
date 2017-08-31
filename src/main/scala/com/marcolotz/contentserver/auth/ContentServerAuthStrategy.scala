@@ -1,8 +1,8 @@
-package com.marcolotz.auth
+package com.marcolotz.contentserver.auth
 
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 
-import com.marcolotz.configuration.ConfigurationManager
+import com.marcolotz.contentserver.configuration.ConfigurationManager
 import org.scalatra.ScalatraBase
 import org.scalatra.auth.strategy.BasicAuthStrategy
 

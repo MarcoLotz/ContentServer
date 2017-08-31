@@ -1,5 +1,8 @@
-package com.marcolotz.filesystem
+package com.marcolotz.contentserver.filesystem
 
+/**
+  * Created by prometheus on 31/08/2017.
+  */
 trait FileSystemItem {
   def name: String
 

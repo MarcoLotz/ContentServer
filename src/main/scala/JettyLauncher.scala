@@ -1,4 +1,4 @@
-import com.marcolotz.configuration.ConfigurationManager
+import com.marcolotz.contentserver.configuration.ConfigurationManager
 import com.typesafe.scalalogging.LazyLogging
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.{DefaultServlet, ServletHolder}

@@ -3,7 +3,7 @@ package com.marcolotz.renderer
 import java.io.File
 
 import com.marcolotz.ContentServerTest
-import com.marcolotz.filesystem.{FileSystemItem, FileSystemItemFactory}
+import com.marcolotz.contentserver.filesystem.FileSystemItemFactory
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 

@@ -1,6 +1,6 @@
-package com.marcolotz.renderer
+package com.marcolotz.contentserver.renderer
 
-import com.marcolotz.filesystem.{FileSystemItem, FileSystemManager}
+import com.marcolotz.contentserver.filesystem.{FileSystemItem, FileSystemManager}
 import org.fusesource.scalate._
 
 /** *
