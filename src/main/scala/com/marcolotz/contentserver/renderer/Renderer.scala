@@ -18,9 +18,9 @@ object Renderer {
   /** *
     * Template Paths
     */
-  private val landingServerTemplatePath = "templates/landingServer.jade"
-  private val contentServerTemplatePath = "templates/contentServer.jade"
-  private val streamFileTemplatePath = "templates/streamVideo.jade"
+  private val landingServerTemplatePath = "src/main/webapp/WEB-INF/templates/landingServer.jade"
+  private val contentServerTemplatePath = "src/main/webapp/WEB-INF/templates/contentServer.jade"
+  private val streamFileTemplatePath = "src/main/webapp/WEB-INF/templates/streamVideo.jade"
 
   /** *
     * Content server HTML page render

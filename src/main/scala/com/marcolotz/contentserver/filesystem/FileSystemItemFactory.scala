@@ -55,7 +55,7 @@ object FileSystemItemFactory extends LazyLogging{
     override val humanReadableSize = FileUtils.byteCountToDisplaySize(size)
 
     override def getHtmlTemplatePath(): String = {
-      "templates/contentDirectory.jade"
+      "src/main/webapp/WEB-INF/templates/contentDirectory.jade"
     }
   }
 
@@ -65,7 +65,7 @@ object FileSystemItemFactory extends LazyLogging{
     override val extension: String = FilenameUtils.getExtension(file.getAbsolutePath).toLowerCase
 
     override def getHtmlTemplatePath(): String = {
-      "templates/contentFile.jade"
+      "src/main/webapp/WEB-INF/templates/contentFile.jade"
     }
   }
 
@@ -73,7 +73,7 @@ object FileSystemItemFactory extends LazyLogging{
     override val isPlayable = true
 
     override def getHtmlTemplatePath(): String = {
-      "templates/contentStream.jade"
+      "src/main/webapp/WEB-INF/templates/contentStream.jade"
     }
   }
 
