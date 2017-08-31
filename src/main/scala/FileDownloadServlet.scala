@@ -1,12 +1,12 @@
 import java.io._
-import java.util.Properties
 
+import com.marcolotz.auth.AuthenticationSupport
 import com.marcolotz.filesystem.FileSystemManager
 import com.typesafe.scalalogging.LazyLogging
-import org.apache.commons.io.{FilenameUtils, IOUtils}
+import org.apache.commons.io.IOUtils
 import org.scalatra.{InternalServerError, NotFound, Ok, ScalatraServlet}
 
-class FileDownloadServlet extends ScalatraServlet with LazyLogging {
+class FileDownloadServlet extends ScalatraServlet with AuthenticationSupport with LazyLogging {
 
   private def serveFile(file: File): Unit = {
     val outputStream: OutputStream = response.getOutputStream()

@@ -6,8 +6,6 @@ class LandingServlet extends ScalatraServlet with AuthenticationSupport {
 
   before() {
     contentType = "text/html"
-    // TODO: Fix authentication
-    //basicAuth
   }
 
   get("/") {

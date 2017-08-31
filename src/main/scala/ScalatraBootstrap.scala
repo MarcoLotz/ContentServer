@@ -13,9 +13,6 @@ class ScalatraBootstrap extends LifeCycle with LazyLogging {
 
   override def init(context: ServletContext) {
     configure
-    // Register authentications strategies on sentry. The sequence is cascaded
-    context.initParameters("scentry.strategies") =
-      "com.marcolotz.auth.ContentServerAuthenticationStrategy"
 
     // Mount servlets.
     context.mount(new LandingServlet, "/*")
