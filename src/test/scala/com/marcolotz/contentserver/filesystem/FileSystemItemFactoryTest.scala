@@ -1,5 +1,6 @@
-package com.marcolotz.filesystem
-import com.marcolotz.ContentServerTest
+package com.marcolotz.contentserver.filesystem
+
+import com.marcolotz.contentserver.renderer.ContentServerTest
 
 /**
   * Created by prometheus on 01/08/2017.

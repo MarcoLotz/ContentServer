@@ -1,9 +1,8 @@
-package com.marcolotz
+package com.marcolotz.contentserver.renderer
 
 import java.io.File
 
 import com.marcolotz.contentserver.filesystem.{FileSystemItem, FileSystemItemFactory}
-import com.marcolotz.filesystem.FileSystemItem
 import org.scalatest.FunSuite
 
 /**

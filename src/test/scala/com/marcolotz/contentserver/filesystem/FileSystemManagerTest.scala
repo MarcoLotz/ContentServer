@@ -1,12 +1,10 @@
-package com.marcolotz.filesystem
+package com.marcolotz.contentserver.filesystem
 
 import java.io.File
 import java.nio.file.Files
 
-import com.marcolotz.ContentServerTest
-import com.marcolotz.configuration.ServerConfiguration
-import com.marcolotz.contentserver.filesystem.{FileSystemItemFactory, FileSystemManager}
-import org.scalatest.{BeforeAndAfterAll, PrivateMethodTester}
+import com.marcolotz.contentserver.renderer.ContentServerTest
+import org.scalatest.BeforeAndAfterAll
 
 /**
   * Created by Marco Lotz on 01/08/2017.
