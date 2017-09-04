@@ -12,7 +12,7 @@ import org.scalatra.LifeCycle
 class ScalatraBootstrap extends LifeCycle with LazyLogging {
 
   override def init(context: ServletContext) {
-    configure
+    configure(context)
 
     // Mount servlets.
     context.mount(new LandingServlet, "/*")
@@ -21,7 +21,10 @@ class ScalatraBootstrap extends LifeCycle with LazyLogging {
     context.mount(new StreamServlet, "/stream/*")
   }
 
-  private def configure(): Unit = {
+  private def configure(context: ServletContext): Unit = {
+    // TODO: Add HTTPS:
+    // context.initParameters("org.scalatra.ForceHttps") = "true"
+
     ConfigurationManager.loadAsContainer()
     FileSystemManager.init(ConfigurationManager.getConguration())
   }
