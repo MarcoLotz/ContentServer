@@ -1,5 +1,6 @@
 package com.marcolotz.contentserver.auth
 
+import com.marcolotz.contentserver.configuration.ConfigurationManager
 import org.scalatra.ScalatraBase
 import org.scalatra.auth.strategy.BasicAuthSupport
 import org.scalatra.auth.{ScentryConfig, ScentrySupport}
@@ -9,7 +10,7 @@ trait AuthenticationSupport extends ScentrySupport[User] with BasicAuthSupport[U
 
   // All classes that extend this trait have basicAuth before reaching the end-points
   before() {
-    basicAuth
+    if (ConfigurationManager.getConguration().enableUserAuthentication) basicAuth
   }
 
   // Used when sendint the authentication header
