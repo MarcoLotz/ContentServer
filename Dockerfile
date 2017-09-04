@@ -1,5 +1,5 @@
 #
-# a scala content server
+# A scala content server
 #
 # https://github.com/marcolotz/ContentServer
 #
