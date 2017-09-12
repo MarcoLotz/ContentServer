@@ -1,4 +1,31 @@
-h1 {
-    display: block;
-    margin: 32px;
+.mainheader {
+    background-color: #79b458;
+    border-left-color: #437001;
+    border-left-style: solid;
+    border-left-width: 8px;
+    border-radius: 8px;
+    padding: 0.05px 16px;
+    font-size: 15px;
+    font-family: "Roboto", sans-serif;
+
+    color: white;
+    line-height: 40px;
+}
+
+.info {
+    font-family: "Roboto", sans-serif;
+    margin-left: 60px;
+}
+
+.info .option {
+    font-size: 15px;
+    color: black;
+}
+
+.info .choose {
+    font-size: 20px;
+}
+
+.bulletchoose {
+    color:  #79b458;
 }

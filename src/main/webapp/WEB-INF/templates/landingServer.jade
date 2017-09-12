@@ -1,14 +1,20 @@
 !!! 5
 html(lang='en')
-  head
-    title Content Server
-    link(rel='stylesheet' type='text/css' href='stylesheet/default.css')
-  body
-    h1 Content Server:
-    hr
-    p.choose Choose one of the following options:
-    br
-    p.option
-      a(href='content') Files
-    p.option request download to server
-    p.option access logs
+    head
+        title Content Server
+        link(rel='stylesheet' type='text/css' href='stylesheet/default.css')
+        link(rel='javascript' type='text/javascript' href='javascript/default.js')
+    body
+        .mainheader
+            h1 Content Server:
+        .info
+            p.choose Choose one of the following options:
+            ul.bulletchoose
+                li
+                    p.option
+                        a(href='content') Filesystem exploring
+                li
+                    p.option Request download to server
+                li
+                    p.option Access logs
+            p
