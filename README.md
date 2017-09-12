@@ -90,4 +90,4 @@ docker run marcolotz/contentserver
 To configure the docker deployment, it is expected for the user to provide command line arguments.
 
 ## Under the hood
-Content server is mostly implemented in Scala, with the Scalatra and Scalate libraries. The command line parsing is done through Scoop.
+Content server is mostly implemented in Scala, with the Scalatra and Scalate libraries. The command line parsing is done through Scopt.
