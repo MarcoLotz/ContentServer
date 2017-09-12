@@ -4,7 +4,10 @@
 html
   head
     title Content Server
+    link(rel='stylesheet' type='text/css' href='/stylesheet/default.css')
+    link(rel='javascript' type='text/javascript' href='/javascript/default.js')
   body
-    h1 #{topDirectory}:
-    <hr>
-    p #{unescape(innerContent)}
+    .mainheader
+      h1 #{topDirectory}:
+    .info
+      p #{unescape(innerContent)}

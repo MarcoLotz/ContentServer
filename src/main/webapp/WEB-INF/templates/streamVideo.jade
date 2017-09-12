@@ -3,7 +3,11 @@
 html(lang='en')
   head
     title Video Stream
-  body(style='margin: 0px;')
-    h1 #{item.name}
-    video(controls='' name='media')
-      source(src='/stream-content/#{item.name}' type='video/#{item.extension}')
+    link(rel='stylesheet' type='text/css' href='/stylesheet/default.css')
+    link(rel='javascript' type='text/javascript' href='/javascript/default.js')
+  body
+    .mainheader
+      h1 #{item.name}
+    .videocontent
+      video(controls='' name='media')
+        source(src='/stream-content/#{item.name}' type='video/#{item.extension}')
