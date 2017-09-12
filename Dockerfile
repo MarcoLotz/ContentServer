@@ -16,5 +16,13 @@ RUN \
   cd /root && \
   git clone https://github.com/marcolotz/contentserver
 
+# Download dependencies and compile content server
+RUN \
+  cd contentserver && \
+  sbt reload compile
+
 # Define working directory
-WORKDIR /root
+WORKDIR /root/contentserver
+
+# overwrite this with 'CMD []' in a dependent Dockerfile
+CMD ["sbt container:start"]
