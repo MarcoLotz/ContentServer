@@ -85,7 +85,7 @@ In order to deploy a container running this application, simply run:
 docker run -v [Absolute path of directory to mount]:/root/mount -p [port number to be exposed on host]:8080 marcolotz/contentserver:latest sbt "run -p 8080 -m /root/mount -t /root/tmp"
 ```
 
-Bear in mind that, as mentioned [here](https://forums.docker.com/t/can-i-change-the-default-ip-from-0-0-0-0-when-binding/30358), by default you will be able to reach the content server on ***[host machine ip]***:***[mapped port]***, instead of default 127.0.0.1 loopback ip.
+Bear in mind that, as mentioned [here](https://forums.docker.com/t/can-i-change-the-default-ip-from-0-0-0-0-when-binding/30358), by default you will be able to reach the content server on ***[host machine ip]*** : ***[mapped port]***, instead of default 127.0.0.1 loopback ip.
 To debug the output of the application, use the docker flags -it.
 ##### Docker configuration
 
