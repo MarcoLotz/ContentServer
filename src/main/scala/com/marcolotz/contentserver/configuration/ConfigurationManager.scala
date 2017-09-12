@@ -60,9 +60,7 @@ object ConfigurationManager extends LazyLogging {
     *
     * @param path
     */
-  def loadAsContainer(path: String = "conf/config.json"): Unit = {
-    if (c == null) load(path)
-  }
+  def loadAsContainer(path: String = "conf/config.json"): Unit = if (c == null) load(path)
 
   /** *
     * Load configuration file from path
@@ -74,21 +72,21 @@ object ConfigurationManager extends LazyLogging {
   def load(path: String = "conf/config.json", args: Array[String] = Array()): Unit = {
     implicit val formats = DefaultFormats
 
-    logger.debug("Starting File system manager")
+    logger.debug("Configuring system")
     // load configuration file
     val jsonString = new String(Files.readAllBytes(Paths.get(path)))
-    logger.debug(jsonString)
 
     Option(read[ServerConfiguration](jsonString)) match {
       case Some(conf) => {
         c = conf
-        updateConfigFromArgs(args)
+        if (!args.isEmpty) updateConfigFromArgs(args)
       }
       case None => {
         logger.error("configuration file not found at " + path)
         throw new FileNotFoundException(path)
       }
     }
+    logger.debug(c.toString)
   }
 
   /** *
@@ -102,6 +100,7 @@ object ConfigurationManager extends LazyLogging {
   @throws[IllegalArgumentException]
   private def updateConfigFromArgs(args: Array[String])
   : Unit = {
+    logger.debug("Parsing command line options.")
     if (!parser.parse(args)) {
       // arguments are bad, usage message will have to be displayed
       throw new IllegalArgumentException()
