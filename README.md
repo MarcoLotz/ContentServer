@@ -53,7 +53,7 @@ All the options available in the JSON configuration are also available through c
 To see the command line usage, run the following command:
 
 ```shell
-sbt run --help
+sbt "run --help"
 ```
 
 ### Deploy
@@ -73,7 +73,7 @@ SBT accepts configurations on either the JSON file (available in the conf folder
 In order to configure through command line parameters, it should be executed as 
 
 ```shell
-sbt run [parameters]
+sbt "run [parameters]"
 ```
 
 #### Docker container
@@ -82,9 +82,11 @@ The docker container approach is more straight-forward, since it only requires d
 In order to deploy a container running this application, simply run:
 
 ```shell
-docker run marcolotz/contentserver
+docker run -v [Absolute path of directory to mount]:/root/mount -p [port number to be exposed on host]:8080 marcolotz/contentserver:latest sbt "run -p 8080 -m /root/mount -t /root/tmp"
 ```
 
+Bear in mind that, as mentioned [here](https://forums.docker.com/t/can-i-change-the-default-ip-from-0-0-0-0-when-binding/30358), by default you will be able to reach the content server on ***[host machine ip]***:***[mapped port]***, instead of default 127.0.0.1 loopback ip.
+To debug the output of the application, use the docker flags -it.
 ##### Docker configuration
 
 To configure the docker deployment, it is expected for the user to provide command line arguments.
